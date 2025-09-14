@@ -7,16 +7,15 @@
         <div class="col-sm-6">
             <h1>All Apointments</h1>
         </div>
-
     </div>
 @stop
 
 @section('content')
-    <!-- Modal -->
+    <!-- Modal form for appointment details -->
     <form id="appointmentStatusForm" method="POST" action="{{ route('appointments.update.status') }}">
+
         @csrf
         <input type="hidden" name="appointment_id" id="modalAppointmentId">
-
         <div class="modal fade" id="appointmentModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -32,30 +31,24 @@
                         <p><strong>Service:</strong> <span id="modalService">N/A</span></p>
                         <p><strong>Email:</strong> <span id="modalEmail">N/A</span></p>
                         <p><strong>Phone:</strong> <span id="modalPhone">N/A</span></p>
-                        <p><strong>Staff:</strong> <span id="modalStaff">N/A</span></p>
-                        <p><strong>Start:</strong> <span id="modalStartTime">N/A</span></p>
+                        <p><strong>Doctor:</strong> <span id="modalStaff">N/A</span></p>
+                        <p><strong>Date & Time:</strong> <span id="modalStartTime">N/A</span></p>
                         <p><strong>Amount:</strong> <span id="modalAmount">N/A</span></p>
                         <p><strong>Notes:</strong> <span id="modalNotes">N/A</span></p>
                         <p><strong>Current Status:</strong> <span id="modalStatusBadge">N/A</span></p>
 
-
                         <div class="form-group ">
                             <label><strong>Status:</strong></label>
                             <select name="status" class="form-control" id="modalStatusSelect">
-                                <option value="Pending payment">Pending payment</option>
-                                <option value="Processing">Processing</option>
+                                <option value="Pending">Pending</option>
                                 <option value="Confirmed">Confirmed</option>
                                 <option value="Cancelled">Cancelled</option>
-                                <option value="Completed">Completed</option>
-                                <option value="On Hold">On Hold</option>
-                                {{-- <option value="Rescheduled">Rescheduled</option> --}}
-                                <option value="No Show">No Show</option>
                             </select>
                         </div>
                     </div>
 
                     <div class="modal-footer">
-                        <button type="submit" onclick="return confirm('Are you sure you want to update booking status?')"
+                        <button type="submit" onclick="return confirm('Are you sure you want to update the booking status?')"
                             class="btn btn-danger">Update Status</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
@@ -64,7 +57,10 @@
             </div>
         </div>
     </form>
+    
+    <!-- Main Content of the page -->
     <div class="">
+        <!-- Success toast -->
         @if (session('success'))
             <div class="alert alert-success alert-dismissable">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -73,10 +69,8 @@
                 <strong>{{ session('success') }}</strong>
             </div>
         @endif
-        <!-- Content Header (Page header) -->
-        <!-- Content Header (Page header) -->
 
-        <!-- Main content -->
+        <!-- Table section for All Appointments -->
         <section class="content">
             <div class="container-fluid">
                 <div class="row">
@@ -91,7 +85,7 @@
                                                 #
                                             </th>
                                             <th style="width: 15%">
-                                                User
+                                                Client
                                             </th>
                                             <th style="width: 15%">
                                                 Email
@@ -100,10 +94,8 @@
                                                 Phone
                                             </th>
                                             <th style="width: 10%">
-                                                Staff
+                                                Doctor
                                             </th>
-
-
                                             <th style="width: 10%">
                                                 Service
                                             </th>
@@ -113,9 +105,7 @@
                                             <th style="width: 10%">
                                                 Time
                                             </th>
-
-
-                                            <th style="width: 15%" class="text-center">
+                                            <th style="width: 10%" class="text-center">
                                                 Status
                                             </th>
                                             <th style="width: 18%">
@@ -123,17 +113,13 @@
                                             </th>
                                         </tr>
                                     </thead>
+
                                     <tbody>
                                         @php
                                             $statusColors = [
-                                                'Pending payment' => '#f39c12',
-                                                'Processing' => '#3498db',
+                                                'Pending' => '#f39c12',
                                                 'Confirmed' => '#2ecc71',
                                                 'Cancelled' => '#ff0000',
-                                                'Completed' => '#008000',
-                                                'On Hold' => '#95a5a6',
-                                                'Rescheduled' => '#f1c40f',
-                                                'No Show' => '#e67e22',
                                             ];
                                         @endphp
                                         @foreach ($appointments as $appointment)
@@ -159,7 +145,6 @@
                                                 <td>
                                                     {{ $appointment->employee->user->name }}
                                                 </td>
-
                                                 <td>
                                                     {{ $appointment->service->title ?? 'NA' }}
                                                 </td>
@@ -169,6 +154,7 @@
                                                 <td>
                                                     {{ $appointment->booking_time }}
                                                 </td>
+
                                                 <td>
                                                     @php
                                                         $status = $appointment->status;
@@ -179,8 +165,9 @@
                                                         {{ $status }}
                                                     </span>
                                                 </td>
+
                                                 <td>
-                                                    <button class="btn btn-primary btn-sm py-0 px-1 view-appointment-btn"
+                                                    <button class="btn btn-primary btn-md d-flex align-items-center py-0 px-1 view-appointment-btn"
                                                         data-toggle="modal" data-target="#appointmentModal"
                                                         data-id="{{ $appointment->id }}"
                                                         data-name="{{ $appointment->name }}"
@@ -191,24 +178,23 @@
                                                         data-start="{{ $appointment->booking_date . ' ' . $appointment->booking_time }}"
                                                         data-amount="{{ $appointment->amount }}"
                                                         data-notes="{{ $appointment->notes }}"
-                                                        data-status="{{ $appointment->status }}">View</button>
-                                                </td>
+                                                        data-status="{{ $appointment->status }}">                                      
+                                                        <i class="fas fa-fw fa-eye"></i> View
+                                                    </button>
+                                                </td>                                       
                                             </tr>
                                         @endforeach
                                     </tbody>
                                 </table>
-
                             </div>
-                            <!-- /.card-body -->
-                        </div>
-                    </div>
-                    <!-- /.col -->
 
+                        </div>                      
+                    </div>
                 </div>
-                <!-- /.row -->
-            </div><!-- /.container-fluid -->
+            </div>
         </section>
     </div>
+
 @stop
 
 @section('css')
@@ -216,8 +202,7 @@
 @stop
 
 @section('js')
-
-    {{-- hide notifcation --}}
+    <!-- Hide toast -->
     <script>
         $(document).ready(function() {
             $(".alert").delay(6000).slideUp(300);
@@ -229,15 +214,11 @@
             $('#myTable').DataTable({
                 responsive: true
             });
-
         });
     </script>
 
-
-
     <script>
         $(document).on('click', '.view-appointment-btn', function() {
-            // Set modal fields
             $('#modalAppointmentId').val($(this).data('id'));
             $('#modalAppointmentName').text($(this).data('name'));
             $('#modalService').text($(this).data('service'));
@@ -248,20 +229,13 @@
             $('#modalAmount').text($(this).data('amount'));
             $('#modalNotes').text($(this).data('notes'));
 
-            // Set status select dropdown
             var status = $(this).data('status');
             $('#modalStatusSelect').val(status);
 
-            // Set status badge
             var statusColors = {
-                'Pending payment': '#f39c12',
-                'Processing': '#3498db',
+                'Pending': '#f39c12',
                 'Confirmed': '#2ecc71',
                 'Cancelled': '#ff0000',
-                'Completed': '#008000',
-                'On Hold': '#95a5a6',
-                'Rescheduled': '#f1c40f',
-                'No Show': '#e67e22',
             };
 
             var badgeColor = statusColors[status] || '#7f8c8d';
