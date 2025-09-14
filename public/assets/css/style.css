@@ -189,6 +189,21 @@ body {
     border-bottom: 1px solid #e3e6f0;
 }
 
+/* Carousel Section */
+html {
+  scroll-behavior: smooth;
+}
+
+.c-item {
+    height: 480px;
+}
+
+.c-img {
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.7);
+}
+
 @keyframes fadeIn {
     from {
         opacity: 0;
