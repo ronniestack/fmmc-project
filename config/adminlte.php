@@ -301,13 +301,14 @@ return [
     'menu' => [
         // Navbar items:
         [
-            'type' => 'navbar-search',
-            'text' => 'search',
-            'topnav_right' => false,
+            'type'          => 'navbar-search',
+            'text'          => 'search',
+            'topnav_right'  => false,
         ],
+
         [
-            'type' => 'fullscreen-widget',
-            'topnav_right' => false,
+            'type'          => 'fullscreen-widget',
+            'topnav_right'  => false,
         ],
 
         // Sidebar items:
@@ -317,17 +318,17 @@ return [
         ],
 
         [
-            'text' => 'Dashboard',
+            'text'  => 'Dashboard',
             'route' => 'home',
-            'icon' => 'fas fa-fw fa-home',
+            'icon'  => 'fas fa-fw fa-home',
             'route' => 'dashboard'
         ],
-        [
-            'text' => ' All Appointments',
-            'route' => 'appointments',
-            'icon' => 'fas fa-calendar-check',
-            'can'  => 'appointments.view | appointments.create | appointments.edit | appointments.delete',
 
+        [
+            'text'  => ' All Appointments',
+            'route' => 'appointments',
+            'icon'  => 'fas fa-calendar-check',
+            'can'   => 'appointments.view | appointments.create | appointments.edit | appointments.delete',
         ],
 
         [
@@ -337,81 +338,79 @@ return [
             'can'  => 'categories.view | categories.create | categories.edit | categories.delete',
             'submenu' => [
                 [
-                    'text' => 'Add New',
-                    'icon' => 'fas fa-fw fa-plus',
+                    'text'  => 'Add New',
+                    'icon'  => 'fas fa-fw fa-plus',
                     'route' => 'category.create',
                     'can'   => 'categories.create'
                 ],
                 [
-                    'text' => 'View All',
-                    'icon' => 'fas fa-fw fa-eye',
+                    'text'  => 'View All',
+                    'icon'  => 'fas fa-fw fa-eye',
                     'route' => 'category.index',
                     'can'   => 'categories.view'
                 ],
+            ],
+        ],
+              
+        [
+            'text'      => 'Services',
+            'url'       => 'service*',
+            'icon'      => 'fas fa-fw fa-briefcase',
+            'can'       => 'services.view | services.create | services.edit | services.delete',
+            'submenu'   => [
+                [
+                    'text'  => 'Create Service',
+                    'icon'  => 'fas fa-fw fa-plus',
+                    'route' => 'service.create',
+                    'can'   => 'services.create'
+                ],
+                [
+                    'text'  => 'View All',
+                    'icon'  => 'fas fa-fw fa-eye',
+                    'route' => 'service.index',
+                    'can'   => 'services.view'
+                ],
+                [
+                    'text'  => 'View Trash',
+                    'icon'  => 'fas fa-fw fa-trash',
+                    'route' => 'service.trash',
+                    'can'   => 'services.view'
+                ],
 
             ],
         ],
+
         [
-            'text'    => 'Users',
-            'url'  => 'user*',
-            'icon'    => 'fas fa-fw fa-users',
-            'can'  => 'users.view | users.create | users.edit | users.delete',
-            'submenu' => [
+            'text'      => 'Users',
+            'url'       => 'user*',
+            'icon'      => 'fas fa-fw fa-users',
+            'can'       => 'users.view | users.create | users.edit | users.delete',
+            'submenu'   => [
                 [
-                    'text' => 'Add New',
-                    'icon'    => 'fas fa-fw fa-plus',
-                    'route'  => 'user.create',
-                    'can'  => 'users.create',
+                    'text'  => 'Add New',
+                    'icon'  => 'fas fa-fw fa-plus',
+                    'route' => 'user.create',
+                    'can'   => 'users.create',
                 ],
                 [
-                    'text' => 'View All',
-                    'icon'    => 'fas fa-users',
+                    'text'  => 'View All',
+                    'icon'  => 'fas fa-users',
                     'route' => 'user.index',
                 ],
-
-
-
             ],
         ],
-        [
-            'text'    => 'Services',
-            'url'  => 'service*',
-            'icon'    => 'fas fa-fw fa-briefcase',
-            'can'  => 'services.view | services.create | services.edit | services.delete',
-            'submenu' => [
 
-                [
-                    'text' => 'Create Service',
-                    'icon'    => 'fas fa-fw fa-plus',
-                    'route'  => 'service.create',
-                    'can'    => 'services.create'
-                ],
-                [
-                    'text' => 'View All',
-                    'icon'    => 'fas fa-fw fa-eye',
-                    'route'  => 'service.index',
-                    'can'    => 'services.view'
-                ],
-                [
-                    'text' => 'View Trash',
-                    'icon'    => 'fas fa-fw fa-trash',
-                    'route'  => 'service.trash',
-                    'can'    => 'services.view'
-                ],
-
-            ],
-        ],
         [
-            'text' => 'profile',
+            'text'  => 'Profile',
             'route' => 'profile',
-            'icon' => 'fas fa-fw fa-user',
-
+            'icon'  => 'fas fa-fw fa-user',
         ],
+
         [
-            'text' => 'Settings',
-            'route'  => 'setting',
-            'icon' => 'fas fa-fw fa-cog',
-            'can'  => 'setting update',
+            'text'  => 'Settings',
+            'route' => 'setting',
+            'icon'  => 'fas fa-fw fa-cog',
+            'can'   => 'setting update',
         ],
 
         // [
@@ -492,7 +491,7 @@ return [
     'plugins' => [
         'Datatables' => [
             'active' => true,
-            'files' => [
+            'files'  => [
                 [
                     'type' => 'js',
                     'asset' => false,
