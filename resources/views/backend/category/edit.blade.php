@@ -3,11 +3,10 @@
 @section('title', 'Edit Category')
 
 @section('content_header')
-
     <div class="container-fluid">
         <div class="row mb-1">
             <div class="col-sm-6">
-                <h1 style="text-decoration: underline;" class="m-0 text-decoration-underline">Edit {{ $category->title }}</h1>
+                <h1 style="text-decoration:underline;" class="m-0 text-decoration-underline">Edit {{ $category->title }}</h1>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
@@ -17,11 +16,10 @@
             </div>
         </div>
     </div>
-
 @stop
 
 @section('content')
-
+    <!-- Error toast -->
     @if (count($errors) > 0)
         <div class="alert alert-dismissable alert-danger mt-3">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -36,48 +34,48 @@
         </div>
     @endif
 
+    <!-- Main content of the page -->
     <div class="container-fluid">
         <div class=" justify-content-between pb-5">
 
-            <form role="form" method="post" action="{{ route('category.update', $category->id) }}"
-                enctype="multipart/form-data">
+            <form role="form" method="post" action="{{ route('category.update', $category->id) }}" enctype="multipart/form-data">
+
                 @csrf
                 @method('PATCH')
                 <div class="row">
+
+                    <!--Edit Category title, slug, description field -->
                     <div class="col-md-8">
                         <div class="card card-light">
                             <div class="card-header">
-                                <h3 class="card-title">Edit Category
-                                </h3>
+                                <h3 class="card-title">Edit Category</h3>
                                 <div class="card-tools">
-                                    <button type="button" class="btn btn-tool" data-card-widget="collapse"
-                                        title="Collapse">
-                                        <i class="fas fa-minus" aria-hidden="true">
-                                        </i>
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                                        <i class="fas fa-minus" aria-hidden="true"></i>
                                     </button>
                                 </div>
                             </div>
                             <div class="card-body">
                                 <div class="form-group">
-                                    <label for="inputStatus">Title
-                                    </label>
+                                    <label for="inputStatus">Title</label>
                                     <input class="form-control @error('title') is-invalid @enderror" type="text"
                                         id="title" name="title" placeholder="Title here.."
                                         value="{{ old('title', $category->title) }}">
                                     <small class="text-muted">The name is how it appears on your site.</small>
+
                                     @error('title')
                                         <p class="text-danger">{{ $message }}</p>
                                     @enderror
                                 </div>
-                                <div class="form-group">
-                                    <label class="mb-0" for="inputStatus">Slug
-                                    </label>
 
+                                <div class="form-group">
+                                    <label class="mb-0" for="inputStatus">Slug</label>
                                     <input style="background-color: rgb(220, 220, 220);"
                                         class="form-control @error('slug') is-invalid @enderror" type="text"
                                         id="slug" name="slug" placeholder="slug here.."
                                         value="{{ old('slug', $category->slug) }}">
-                                    <small class="text-muted">&nbsp;&nbsp;The “slug” is the URL-friendly version of the
+                                    <small class="text-muted">
+                                        &nbsp;&nbsp;The “slug” is the URL-friendly version of the
                                         name. It is usually all lowercase and contains only letters, numbers, and hyphens.
                                     </small>
 
@@ -91,94 +89,36 @@
 
                         <div class="card card-light">
                             <div class="card-header">
-                                <h3 class="card-title">Description
-                                </h3>
-                                <small>&nbsp;&nbsp;The description is not prominent by default; however, some themes may
-                                    show it.
+                                <h3 class="card-title">Description</h3>
+                                <small>
+                                    &nbsp;&nbsp;The description is not prominent by default; however, some themes may show it.
                                 </small>
                                 <div class="card-tools">
-                                    <button type="button" class="btn btn-tool" data-card-widget="collapse"
-                                        title="Collapse">
-                                        <i class="fas fa-minus" aria-hidden="true">
-                                        </i>
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                                        <i class="fas fa-minus" aria-hidden="true"></i>
                                     </button>
                                 </div>
                             </div>
                             <div class="card-body">
                                 <div class="form-group">
                                     <textarea class="form-control" name="body" id="" value="{{ old('body') }}" cols="30" rows="5">{{ old('body', $category->body) }}</textarea>
+
                                     @error('body')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
                             </div>
-                            <!-- /.card-body -->
-                        </div>
-                        <!-- /.card -->
-                        {{-- seo --}}
-                        {{-- <div class="card card-light">
-                            <div class="card-header">
-                                <h3 class="card-title">SEO
-                                </h3>
-                                <small>&nbsp;&nbsp;Search engine details
-                                </small>
-                                <div class="card-tools">
-                                    <button type="button" class="btn btn-tool" data-card-widget="collapse"
-                                        title="Collapse">
-                                        <i class="fas fa-minus" aria-hidden="true">
-                                        </i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="card-body pt-3 pb-0">
-                                <div class="form-group">
-                                    <label for="">SEO Title
-                                    </label>
-                                    <input placeholder="Post title here for seo..." type="text"
-                                        class="form-control @error('meta_title') is-invalid @enderror" name="meta_title"
-                                        id="" value="{{ old('meta_title', $category->meta_title) }}">
-                                    @error('meta_title')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="card-body  pt-0 pb-0">
-                                <div class="form-group">
-                                    <label for="">SEO Description
-                                    </label>
-                                    <textarea placeholder="Post description here for seo..."
-                                        class="form-control @error('meta_description') is-invalid @enderror" name="meta_description" id=""
-                                        cols="0" rows="4" value="{{ old('meta_description', $category->meta_description) }}">{{ old('meta_description', $category->meta_description) }}</textarea>
-                                    @error('meta_description')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="card-body pt-0 pb-0">
-                                <div class="form-group">
-                                    <label for="">SEO Keywords
-                                    </label>
-                                    <input type="text"
-                                        class="form-control @error('meta_keywords') is-invalid @enderror"
-                                        placeholder="keyword1, keyword2, keyword3" name="meta_keywords" id=""
-                                        value="{{ old('meta_keywords', $category->meta_keywords) }}">
-                                    @error('meta_keywords')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
-
-                        </div> --}}
+                        </div>                  
                     </div>
 
+                    <!-- Edit Category details, status, delete image, featured image field -->
                     <div class="col-md-4">
                         <div class="sticky-top">
                             <div class="card card-primary sticky-bottom">
                                 <div class="card-header">
                                     <h3 class="card-title">Category Details</h3>
                                     <div class="card-tools">
-                                        <button type="button" class="btn btn-tool" data-card-widget="collapse"
-                                            title="Collapse">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
                                             <i class="fas fa-minus" aria-hidden="true"></i>
                                         </button>
                                     </div>
@@ -193,6 +133,7 @@
                                             <option value="0" {{ old('published', $category->status) == 0 ? 'selected' : '' }}>DRAFT</option>
                                         </select>
                                     </div>
+
                                     {{-- <div class="form-group">
                                         <div class="custom-control custom-switch">
                                             <input type="checkbox" class="custom-control-input" id="featured"
@@ -204,9 +145,10 @@
                                     </div> --}}
 
                                     <div class="form-group pt-0 pb-0 text-right">
-                                        <button onclick="return confirm('Are you sure you want to update this item?');" type="submit" class="btn btn-danger">Update
+                                        <button onclick="return confirm('Are you sure you want to update this item?');" type="submit" class="btn btn-danger">
+                                            Update
                                         </button>
-                                    </div>
+                                    </div>                    
                                 </div>
                             </div>
 
@@ -214,8 +156,7 @@
                                 <div class="card-header">
                                     <h3 class="card-title">Featured Image</h3>
                                     <div class="card-tools">
-                                        <button type="button" class="btn btn-tool" data-card-widget="collapse"
-                                            title="Collapse">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
                                             <i class="fas fa-minus" aria-hidden="true"></i>
                                         </button>
                                     </div>
@@ -223,44 +164,41 @@
 
                                 <div class="card-body pt-0 pb-0">
                                     <div class="form-group">
-                                       @if ($category->image)
-                                       <div class="form-group">
-                                        <label for="delete_image">Delete Image</label>
-                                        <input type="checkbox" name="delete_image" id="delete_image">
-                                    </div>
-                                       @endif
+                                        @if ($category->image)
+                                            <div class="form-group">
+                                                <label for="delete_image">Delete Image</label>
+                                                <input type="checkbox" name="delete_image" id="delete_image">
+                                            </div>
+                                        @endif
                                         <div class="justify-content-between">
                                             <div>
-                                                {{-- <small class="text-red">&nbsp;&nbsp;Note: Webp Image | size: Width-1280px
-                                                    Height: 720px
-                                                </small><br> --}}
                                                 <input class="form-control mt-2" name="image" accept="image/*" type="file" id="imgInp">
-
                                             </div>
                                             <div>
                                                 @if ($category->image)
                                                     <img class="img-fluid"
-                                                        style="width: 150px; margin-top:10px; border:1px solid black;"
+                                                        style="width:150px; margin-top:10px; border:1px solid black;"
                                                         id="blah"
                                                         src="{{ asset('uploads/images/category/' . $category->image) }}"
                                                         alt="your image">
                                                 @else
-                                                    <img style="width: 150px; margin-top:10px; border:1px solid black;"
-                                                        id="blah" src="{{ asset('uploads/images/no-image.jpg') }}"
+                                                    <img style="width:150px; margin-top:10px; border:1px solid black;"
+                                                        id="blah"
+                                                        src="{{ asset('uploads/images/no-image.jpg') }}"
                                                         alt="your image">
                                                 @endif
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>   
+
                 </div>
             </form>
-        </div>
 
+        </div>
     </div>
 @stop
 
@@ -278,7 +216,6 @@
         });
     </script>
 
-    {{-- show image --}}
     <script>
         imgInp.onchange = evt => {
             const [file] = imgInp.files
@@ -293,5 +230,4 @@
             $(".alert").delay(6000).slideUp(300);
         });
     </script>
-
 @stop
