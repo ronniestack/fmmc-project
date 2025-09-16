@@ -1,9 +1,8 @@
 @extends('adminlte::page')
 
-@section('title', 'Add Category')
+@section('title', 'All Categories')
 
 @section('content_header')
-
     <div class="container-fluid">
         <div class="row ">
             <div class="col-sm-6">
@@ -17,11 +16,10 @@
             </div>
         </div>
     </div>
-
 @stop
 
 @section('content')
-
+    <!-- Error toast -->
     @if (count($errors) > 0)
         <div class="alert alert-dismissable alert-danger mt-3">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -35,6 +33,8 @@
             </ul>
         </div>
     @endif
+
+    <!-- Success toast -->
     @if (session('success'))
         <div class="alert alert-success alert-dismissable">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -44,15 +44,18 @@
         </div>
     @endif
 
+    <!-- Main content of the page -->
     <div class="container-fluid">
-        <div class="row  justify-content-between">
-
+        <div class="row justify-content-between">
             <div class="col-md-12 ">
-                <h5><a href="{{ route('category.create') }}" class="btn btn-primary mb-1"><i class="fas fa-fw fa-plus "></i>
-                        Add New</a>
+                <h5>
+                    <a href="{{ route('category.create') }}" class="btn btn-primary mb-1">
+                        <i class="fas fa-fw fa-plus "></i> Add New
+                    </a>
                 </h5>
+                
+                <!-- Table section -->
                 <div class="card p-2">
-
                     <div id="" class="card-body p-0">
                         <table id="myTable" class="table table-striped projects">
                             <thead>
@@ -72,7 +75,8 @@
                                     <th style="width: 7%">
                                         Status
                                     </th>
-                                    <th style="width: 25%">Action
+                                    <th style="width: 25%">
+                                        Action
                                     </th>
                                 </tr>
                             </thead>
@@ -81,18 +85,11 @@
                                     <tr>
                                         <td> {{ $loop->iteration }} </td>
                                         <td>
-                                            <a>
-                                                {{ $category->title }}
-                                            </a>
-
+                                            <a>{{ $category->title }}</a>
                                         </td>
                                         <td>
                                             <a>{{ $category->slug }}</a>
                                         </td>
-                                        {{-- <td>
-
-                                            {{ $category->posts->count() }}
-                                        </td> --}}
                                         <td>
                                             {{ $category->services->count() }}
                                         </td>
@@ -103,39 +100,37 @@
                                                 <span class="badge badge-danger">In active</span>
                                             @endif
                                         </td>
-                                        <td class="project-actions text-right d-flex">
 
+                                        <td class="project-actions text-right d-flex">
                                             <div>
                                                 <a class="btn btn-info btn-sm ml-2"
                                                     href="{{ route('category.edit', $category->id) }}">
-                                                    <i class="fas fa-pencil-alt">
-                                                    </i>
+                                                    <i class="fas fa-pencil-alt"></i>
                                                     Edit
                                                 </a>
                                             </div>
+
                                             <div>
-                                                <form action="{{ route('category.destroy', $category->id) }}"
-                                                    method="POST">
+                                                <form action="{{ route('category.destroy', $category->id) }}" method="POST">
+                                                    
                                                     @csrf
                                                     @method('DELETE')
                                                     <button
-                                                        onclick="return confirm('Category cannot be delted - Post attached');"
+                                                        onclick="return confirm('Are your sure?');"
                                                         class="btn btn-danger btn-sm ml-2">
                                                         <i class="fas fa-trash"></i>
                                                         Delete
-                                                        </a>
                                                     </button>
                                                 </form>
-
                                             </div>
-                                        </td>
+                                        </td>                                    
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
                     </div>
-                    <!-- /.card-body -->
                 </div>
+
             </div>
         </div>
     </div>
@@ -154,12 +149,12 @@
             $('#slug').val(Text);
         });
     </script>
+
     <script>
         $(document).ready(function() {
             $('#myTable').DataTable({
                 responsive: true
             });
-
         });
     </script>
 
