@@ -6,7 +6,7 @@
     <div class="row mb-2">
         <div class="col-sm-6">
             <h1>Deleted Services</h1>
-            <small>All deleted services - you can restore from delete permanently</small>
+            <small>All deleted services can be restore from here.</small>
         </div>
         <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -19,6 +19,7 @@
 
 @section('content')
     <div class="">
+        <!-- Error toast -->
         @if (count($errors) > 0)
             <div class="alert alert-dismissable alert-danger mt-3">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -32,6 +33,8 @@
                 </ul>
             </div>
         @endif
+
+        <!-- Success toast -->
         @if (session('success'))
             <div class="alert alert-success alert-dismissable">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -41,13 +44,14 @@
             </div>
         @endif
 
+        <!-- Main content of the page -->
         <section class="content">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-md-12 ">
+                    <div class="col-md-12">
                         <div class="card py-2 px-2">
-
                             <div class="card-body p-0">
+
                                 <table id="table-1" class="table table-striped projects">
                                     <thead>
                                         <tr>
@@ -57,20 +61,22 @@
                                             <th style="width: 25%">
                                                 Title
                                             </th>
-                                            <th style="width: 10%">
+                                            <th style="width: 15%">
                                                 Image
                                             </th>
-                                            <th style="width: 10%">
+                                            <th style="width: 15%">
                                                 Category
                                             </th>
-                                            <th>
+
+                                            {{-- <th>
                                                 Featured
-                                            </th>
+                                            </th> --}}
 
                                             <th style="" class="text-center">
                                                 Status
                                             </th>
-                                            <th style="width: 20%">Action
+                                            <th style="width: 20%">
+                                                Action
                                             </th>
                                         </tr>
                                     </thead>
@@ -89,6 +95,7 @@
                                                         Deleted: {{ $service->deleted_at->diffForHumans() }}
                                                     </small>
                                                 </td>
+
                                                 <td>
                                                     @if ($service->image)
                                                         <img style="width:75px;"
@@ -96,25 +103,28 @@
                                                             alt="">
                                                     @else
                                                         <img style="width:75px;"
-                                                            src="{{ asset('uploads/images/no-image.jpg') }}" alt="">
+                                                            src="{{ asset('uploads/images/no-image.jpg') }}"
+                                                            alt="">
                                                     @endif
                                                 </td>
-                                                <td>
 
+                                                <td>
                                                     {{ $service->category->title ?? 'NA' }}
                                                 </td>
-                                                <td>
+
+                                                {{-- <td>
                                                     @if ($service->featured)
                                                         Yes
                                                     @else
                                                         No
                                                     @endif
-                                                </td>
+                                                </td> --}}
+
                                                 <td class="project-state">
                                                     @if ($service->status)
                                                         <span class="badge badge-success">Active</span>
                                                     @else
-                                                        <span class="badge badge-danger">Pending</span>
+                                                        <span class="badge badge-danger">Inactive</span>
                                                     @endif
                                                 </td>
 
@@ -122,25 +132,25 @@
                                                     <div class="mr-2">
                                                         <a onclick="return confirm('Are you sure you want to Restore this item?');"
                                                             class="btn btn-primary btn-sm"
-                                                            href="{{ route('service.restore', $service->id) }}"> <i
-                                                                class="fas fa-folder">
-                                                            </i> Restore </a>
+                                                            href="{{ route('service.restore', $service->id) }}">
+                                                            <i class="fas fa-folder"></i> Restore
+                                                        </a>
                                                     </div>
                                                     <div>
                                                         <form action="{{ route('service.force.delete', $service->id) }}"
                                                             method="post">
+
                                                             @csrf
                                                             @method('delete')
                                                             <button
                                                                 onclick="return confirm('Are you sure you want to delete this item?');"
                                                                 type="submit" class="btn btn-danger btn-sm">
-                                                                <i class="fas fa-trash">
-                                                                </i>
-                                                                Delete
+                                                                <i class="fas fa-trash"></i> Delete
                                                             </button>
                                                         </form>
                                                     </div>
                                                 </td>
+
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -148,18 +158,14 @@
                                 <div class="float-right pt-3">
                                     {{-- {{ $services->links() }} --}}
                                 </div>
+
                             </div>
-                            <!-- /.card-body -->
                         </div>
                     </div>
-                    <!-- /.col -->
-
                 </div>
-                <!-- /.row -->
-            </div><!-- /.container-fluid -->
+            </div>
         </section>
     </div>
-
 @stop
 
 @section('css')
@@ -167,13 +173,12 @@
 @stop
 
 @section('js')
-    {{-- hide notifcation --}}
+    <!-- Hide toast -->
     <script>
         $(document).ready(function() {
             $(".alert").delay(6000).slideUp(300);
         });
     </script>
-
 
     <script>
         $(document).ready(function() {
@@ -181,11 +186,10 @@
         });
     </script>
 
-
-    {{-- Sucess and error notification alert --}}
+    <!-- Sucess and error toast alert -->
     <script>
         $(document).ready(function() {
-            // show error message
+            // Show error message
             @if ($errors->any())
                 //var errorMessage = @json($errors->any()); // Get the first validation error message
                 var Toast = Swal.mixin({
@@ -201,7 +205,7 @@
                 });
             @endif
 
-            // success message
+            // Show success message
             @if (session('success'))
                 var successMessage = @json(session('success')); // Get the first sucess message
                 var Toast = Swal.mixin({
@@ -216,7 +220,6 @@
                     title: successMessage
                 });
             @endif
-
         });
     </script>
 @stop
