@@ -19,6 +19,7 @@
 @stop
 
 @section('content')
+    <!-- Error toast -->
     @if (count($errors) > 0)
         <div class="alert alert-dismissable alert-danger mt-3">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -32,6 +33,8 @@
             </ul>
         </div>
     @endif
+
+    <!-- Success toast -->
     @if (session('success'))
         <div class="alert alert-success alert-dismissable">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -40,111 +43,117 @@
             <strong>{{ session('success') }}</strong>
         </div>
     @endif
+
+    <!-- Main content of the page -->
     <div class="">
         <form action="{{ route('service.update',$service->id) }}" method="post" enctype="multipart/form-data">
+
             @csrf
             @method('PATCH')
             <div class="row">
                 <div class="col-md-8">
+                    <!-- Title and slug field -->
                     <div class="card card-light">
                         <div class="card-header">
-                            <h3 class="card-title">Edit Service
-                            </h3>
+                            <h3 class="card-title">Edit Service</h3>
                             <div class="card-tools">
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                                    <i class="fas fa-minus" aria-hidden="true">
-                                    </i>
+                                    <i class="fas fa-minus" aria-hidden="true"></i>
                                 </button>
                             </div>
                         </div>
                         <div class="card-body">
                             <div class="form-group">
-                                <label for="inputStatus">Title
-                                </label>
+                                <label for="inputStatus">Title</label>
                                 <input class="form-control @error('title') is-invalid @enderror" type="text"
                                     id="title" name="title" placeholder="Title here.." value="{{ old('title',$service->title) }}">
+                                    
                                 @error('title')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
                             <div class="form-group">
-                                <label for="inputStatus">Slug
-                                </label>
-                                <small>&nbsp;&nbsp;Unique url of the Service
+                                <label for="inputStatus">Slug</label>
+                                <small>
+                                    &nbsp;&nbsp;Unique url of the Service
                                 </small>
                                 <input class="form-control bg-light @error('slug') is-invalid @enderror" type="text"
                                     id="slug" name="slug" placeholder="slug here.." value="{{ old('slug',$service->slug) }}">
+
                                 @error('slug')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
-                            {{-- <div class="form-group">
-                                <label for="">Service Description
-                                </label>
 
+                            {{-- <div class="form-group">
+                                <label for="">Service Description</label>
                                 <textarea style="height: 600px;" id="summernote" name="body" value="{{ old('body',$service->body) }}"> {{ old('body',$service->body) }}</textarea>
                                 @error('body')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div> --}}
+
                         </div>
-                        <!-- /.card-body -->
                     </div>
+
+                    <!-- Price and sale price slug field -->
                     <div class="card card-light">
                         <div class="card-header">
-                            <h3 class="card-title">Price
-                            </h3>
-                            <small class="text-muted pl-2"> NO CURRENCY SIGN - NO SPACE</small>
+                            <h3 class="card-title">Price</h3>
+                            <small class="text-muted pl-2">The price will be shown on the website.</small>
 
                             <div class="card-tools">
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                                    <i class="fas fa-minus" aria-hidden="true">
-                                    </i>
+                                    <i class="fas fa-minus" aria-hidden="true"></i>
                                 </button>
                             </div>
                         </div>
                         <div class="card-body">
-                          <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="mb-0" for="price">Price</label>
-                                    <input class="form-control" type="number" name="price" placeholder="Price"
-                                        value="{{ old('price',$service->price) }}">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="mb-0" for="price">Price</label>
+                                        <input class="form-control" type="number" name="price" placeholder="Price"
+                                            value="{{ old('price',$service->price) }}">
                                         <p class="mb-0 text-muted small">Main Price</p>
-                                    @error('price')
-                                        <span class="text-danger">
-                                            {{ $message }}
-                                        </span>
-                                    @enderror
+
+                                        @error('price')
+                                            <span class="text-danger">
+                                                {{ $message }}
+                                            </span>
+                                        @enderror
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="mb-0" for="sale_price">Sale Price</label>
-                                    <input class="form-control" type="number" name="sale_price" placeholder="Price"
-                                        value="{{ old('sale_price',$service->sale_price) }}">
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="mb-0" for="sale_price">Sale Price</label>
+                                        <input class="form-control" type="number" name="sale_price" placeholder="Price"
+                                            value="{{ old('sale_price',$service->sale_price) }}">
                                         <p class="mb-0 text-muted small">Price for sale</p>
-                                    @error('sale_price')
-                                        <span class="text-danger">
-                                            {{ $message }}
-                                        </span>
-                                    @enderror
+                                        
+                                        @error('sale_price')
+                                            <span class="text-danger">
+                                                {{ $message }}
+                                            </span>
+                                        @enderror
+                                    </div>
                                 </div>
+
                             </div>
-                          </div>
                         </div>
-                        <!-- /.card-body -->
                     </div>
+                    
+                    <!-- Description field -->
                     <div class="card card-light">
                         <div class="card-header">
-                            <h3 class="card-title">Excerpt
-                            </h3>
-                            <small>&nbsp;&nbsp;Small Description of the Service
+                            <h3 class="card-title">Description</h3>
+                            <small>
+                                &nbsp;&nbsp;Small Description of the Service
                             </small>
                             <div class="card-tools">
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                                    <i class="fas fa-minus" aria-hidden="true">
-                                    </i>
+                                    <i class="fas fa-minus" aria-hidden="true"></i>
                                 </button>
                             </div>
                         </div>
@@ -154,90 +163,46 @@
                                     rows="5">{{ old('excerpt',$service->excerpt) }}</textarea>
                             </div>
                         </div>
-                        <!-- /.card-body -->
-                    </div>
-                    <!-- /.card -->
-                    {{-- seo --}}
-                    {{-- <div class="card card-light">
-                        <div class="card-header">
-                            <h3 class="card-title">SEO
-                            </h3>
-                            <small>&nbsp;&nbsp;Search engine details
-                            </small>
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse"
-                                    title="Collapse">
-                                    <i class="fas fa-minus" aria-hidden="true">
-                                    </i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="card-body pt-3 pb-0">
-                            <div class="form-group">
-                                <label for="">SEO Title
-                                </label>
-                                <input placeholder="Service title here for seo..." type="text" class="form-control"
-                                    name="meta_title" id="" value="{{ old('meta_title',$service->meta_title) }}">
-                            </div>
-                        </div>
-                        <div class="card-body  pt-0 pb-0">
-                            <div class="form-group">
-                                <label for="">SEO Description
-                                </label>
-                                <textarea placeholder="Service description here for seo..." class="form-control" name="meta_description"
-                                    id="" cols="0" rows="4" value="{{ old('meta_description',$service->meta_description) }}">{{ old('meta_description',$service->meta_description) }}</textarea>
-                            </div>
-                        </div>
-                        <div class="card-body pt-0 pb-0">
-                            <div class="form-group">
-                                <label for="">SEO Keywords
-                                </label>
-                                <input type="text" class="form-control" placeholder="keyword1, keyword2, keyword3"
-                                    name="meta_keyword" id="" value="{{ old('meta_keyword',$service->meta_keyword) }}">
-                            </div>
-                        </div>
-
-                        <!-- /.card-body -->
-                    </div> --}}
+                    </div>                  
                 </div>
+
+
                 <div class="col-md-4">
                     <div class="sticky-top">
+                        <!-- Service details, category and status field -->
                         <div class="card card-primary sticky-bottom">
                             <div class="card-header">
-                                <h3 class="card-title">Service Details
-                                </h3>
+                                <h3 class="card-title">Service Details</h3>
                                 <div class="card-tools">
                                     <button type="button" class="btn btn-tool" data-card-widget="collapse"
                                         title="Collapse">
-                                        <i class="fas fa-minus" aria-hidden="true">
-                                        </i>
+                                        <i class="fas fa-minus" aria-hidden="true"></i>
                                     </button>
                                 </div>
                             </div>
                             <div class="card-body pb-0">
                                 <div class="form-group select2-dark">
-                                    <label>Category
-                                    </label>
-                                    <small>&nbsp;&nbsp;Select category for Service</small>
-
+                                    <label>Category</label>
+                                    <small>
+                                        &nbsp;&nbsp;Select category for Service
+                                    </small>
                                     <select id="category" name="category_id" class="select2" multiple=""
-                                    data-placeholder="Search Category" style="width: 100%;">
-                                    <option value="">None</option>
-                                    @foreach ($categories as $category)
-                                        <option value="{{ $category->id }}"
-                                            {{ isset($service->category->id) && $service->category->id == $category->id ? 'selected' : '' }}>
-                                            {{ $category->title }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                                        data-placeholder="Search Category" style="width:100%;">
+                                        <option value="">None</option>
 
+                                        @foreach ($categories as $category)
+                                            <option value="{{ $category->id }}"
+                                                {{ isset($service->category->id) && $service->category->id == $category->id ? 'selected' : '' }}>
+                                                {{ $category->title }}
+                                            </option>
+                                        @endforeach
+                                    </select>
 
-                                @error('category_id')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-
-
+                                    @error('category_id')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                                 </div>
+
                                 <div class="form-group">
                                     <label for="inputStatus">Status</label>
                                     <select required="required" name="status" id="inputStatus" class="form-control custom-select">
@@ -251,7 +216,6 @@
                                     </select>
                                 </div>
 
-
                                 {{-- <div class="form-group">
                                     <div class="custom-control custom-switch">
                                         <input type="checkbox" class="custom-control-input" id="featured"
@@ -261,49 +225,52 @@
                                         <small>Featured shall be shown on home as priorty</small>
                                     </div>
                                 </div> --}}
+
                                 <div class="form-group pt-0 pb-0 text-right">
                                     <button onclick="return confirm('Are you sure you want to update this item?');" type="submit" class="btn btn-danger">Update
                                     </button>
                                 </div>
                             </div>
-                            <!-- /.card-body -->
                         </div>
-                        <div class="card card-primary ">
+                        
+                        <!-- Featured image field -->
+                        <div class="card card-primary">
                             <div class="card-header">
-                                <h3 class="card-title">Featured Image
-                                </h3>
+                                <h3 class="card-title">Featured Image</h3>
                                 <div class="card-tools">
                                     <button type="button" class="btn btn-tool" data-card-widget="collapse"
                                         title="Collapse">
-                                        <i class="fas fa-minus" aria-hidden="true">
-                                        </i>
+                                        <i class="fas fa-minus" aria-hidden="true"></i>
                                     </button>
                                 </div>
                             </div>
                             <div class="card-body pt-0 pb-0">
                                 <div class="form-group">
-                                    <small class="text-red">&nbsp;&nbsp;Note: size: Width-1200px Height: 800px
+                                    <small class="text-red">
+                                        &nbsp;&nbsp;Note: size: Width-1200px Height: 800px
                                     </small>
                                     <input name="image" accept="image/*" type="file" id="imgInp">
+
                                     @if ($service->image)
-                                    <img class="img-fluid"
-                                        style="width: 150px; margin-top:10px; border:1px solid black;"
-                                        id="blah"
-                                        src="{{ asset('uploads/images/service/' . $service->image) }}"
-                                        alt="your image">
-                                @else
-                                    <img style="width: 150px; margin-top:10px; border:1px solid black;"
-                                        id="blah" src="{{ asset('uploads/images/no-image.jpg') }}"
-                                        alt="your image">
-                                @endif
+                                        <img class="img-fluid"
+                                            style="width:150px; margin-top:10px; border:1px solid black;"
+                                            id="blah"
+                                            src="{{ asset('uploads/images/service/' . $service->image) }}"
+                                            alt="your image">
+                                    @else
+                                        <img style="width:150px; margin-top:10px; border:1px solid black;"
+                                            id="blah" src="{{ asset('uploads/images/no-image.jpg') }}"
+                                            alt="your image">
+                                    @endif
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
+
             </div>
         </form>
-    </div>
     </div>
 @stop
 
@@ -329,16 +296,14 @@
             border-top-left-radius: calc(0.3rem - 1px);
             border-top-right-radius: calc(0.3rem - 1px);
         }
-
     </style>
 
 @stop
 
 @section('js')
-
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 
-    {{-- summer note --}}
+    <!-- Summer note -->
     <script>
         $(document).ready(function() {
             $('#summernote').summernote({
@@ -402,14 +367,10 @@
                     }
                 });
             }
-
         });
-
     </script>
 
-
-
-    {{-- view image while uploading --}}
+    <!-- View image while uploading -->
     <script>
         imgInp.onchange = evt => {
             const [file] = imgInp.files
@@ -418,7 +379,8 @@
             }
         }
     </script>
-    {{-- create live slug --}}
+
+    <!-- Create live slug -->
     <script>
         $('#title').on("change keyup paste click", function() {
             var Text = $(this).val().trim();
@@ -427,6 +389,7 @@
             $('#slug').val(Text);
         });
     </script>
+
     <script>
         // In your Javascript (external .js resource or <script> tag)
         $(document).ready(function() {
@@ -434,17 +397,14 @@
         });
     </script>
 
-
-    {{-- for auto hide alert message --}}
+    <!-- For auto hide alert message -->
     <script>
         $(document).ready(function() {
             $(".alert").delay(6000).slideUp(300);
         });
     </script>
 
-
-    {{-- ck editor image updoad --}}
-
+    <!-- Ck editor image updoad -->
     <script>
         // In your Javascript (external .js resource or <script> tag)
         $(document).ready(function() {
@@ -462,13 +422,10 @@
         });
     </script>
 
-    {{-- disable multiple select2 --}}
-
-
-    {{-- Sucess and error notification alert --}}
+    <!-- Sucess and error toast alert -->
     <script>
         $(document).ready(function() {
-            // show error message
+            // Show error message
             @if ($errors->any())
                 //var errorMessage = @json($errors->any()); // Get the first validation error message
                 var Toast = Swal.mixin({
@@ -484,9 +441,9 @@
                 });
             @endif
 
-            // success message
+            // Success message
             @if (session('success'))
-                var successMessage = @json(session('success')); // Get the first sucess message
+                var successMessage = @json(session('success')); 
                 var Toast = Swal.mixin({
                     toast: true,
                     position: 'top-end',
@@ -499,8 +456,6 @@
                     title: successMessage
                 });
             @endif
-
         });
     </script>
-
 @stop
