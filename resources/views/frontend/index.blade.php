@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> {{ $setting->meta_title }}</title>
-      <!-- SEO Meta Tags -->
-      <meta name="description" content="{{ $setting->meta_description }}">
-      <meta name="keywords" content="{{ $setting->meta_keywords }}">
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="{{ $setting->meta_description }}">
+    <meta name="keywords" content="{{ $setting->meta_keywords }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css"
@@ -20,17 +19,19 @@
 </head>
 
 <body>
-    <header class="header-section">
+    <!-- Navigation bar section -->
+    <header class="header-section sticky-top bg-white shadow-sm">
         <nav class="navbar navbar-expand-lg navbar-light">
             <div class="container">
                 <a class="navbar-brand" href="#">
-                    <i class="bi bi-calendar-check"></i> AppointEase
+                    <i class="bi bi-calendar-check"></i> FMMC-bookme
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
+
                         @guest
                             <li class="nav-item">
                                 <a class="nav-link active" href="{{ route('login') }}">Login</a>
@@ -52,7 +53,57 @@
         </nav>
     </header>
 
-    <div class="container">
+    <!-- Carousel Section-->
+    <div id="hero-carousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#hero-carousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#hero-carousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#hero-carousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active c-item">
+                <img src="{{ asset('images/pic.png') }}" class="d-block w-100 c-img" alt="picture1">
+                <div class="carousel-caption top-0 mt-4">
+                    <p class="mt-5 fs-4 text-uppercase">Book Care, Anytime, Anywhere.</p>
+                    <h1 class="display-3 fw-bolder text-capitalize">Book with ease</h1>
+                    <a href="#booking" class="btn btn-primary px-4 py-2 fs-5 mt-5">
+                        Book Appointment
+                    </a>
+                </div>
+            </div>
+            <div class="carousel-item c-item">
+                <img src="{{ asset('images/pic1.png') }}" class="d-block w-100 c-img" alt="picture2">
+                <div class="carousel-caption top-0 mt-4">
+                    <p class="mt-5 fs-4 text-uppercase">Your Health, Just One Click Away</p>
+                    <h1 class="display-3 fw-bolder text-capitalize">Book with ease</h1>
+                    <a href="#booking" class="btn btn-primary px-4 py-2 fs-5 mt-5">
+                        Book Appointment
+                    </a>
+                </div>
+            </div>
+            <div class="carousel-item c-item">
+                <img src="{{ asset('images/pic2.png') }}" class="d-block w-100 c-img" alt="picture3">
+                <div class="carousel-caption top-0 mt-4">
+                    <p class="mt-5 fs-4 text-uppercase">For a Healthier Tomorrow</p>
+                    <h1 class="display-3 fw-bolder text-capitalize">Book with ease</h1>
+                    <a href="#booking" class="btn btn-primary px-4 py-2 fs-5 mt-5">
+                        Book Appointment
+                    </a>
+                </div>
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#hero-carousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#hero-carousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+    <!-- Appointment booking section -->
+    <div class="container" id="booking">
         <div class="booking-container">
             <div class="booking-header">
                 <h2><i class="bi bi-calendar-check"></i> Appointment Booking</h2>
@@ -70,7 +121,7 @@
                 </div>
                 <div class="step" data-step="3">
                     <div class="step-number">3</div>
-                    <div class="step-title">Staff</div>
+                    <div class="step-title">Doctor</div>
                 </div>
                 <div class="step" data-step="4">
                     <div class="step-number">4</div>
@@ -103,12 +154,12 @@
                     </div>
                 </div>
 
-                <!-- Step 3: Employee Selection -->
+                <!-- Step 3: Doctor Selection -->
                 <div class="booking-step" id="step3">
-                    <h3 class="mb-4">Select a Staff Member</h3>
+                    <h3 class="mb-4">Select a Doctor</h3>
                     <div class="selected-service-name mb-3 fw-bold"></div>
                     <div class="row row-cols-1 row-cols-md-3 g-4" id="employees-container">
-                        <!-- Employees will be loaded dynamically based on service -->
+                        <!-- Doctor will be loaded dynamically based on service -->
                     </div>
                 </div>
 
@@ -121,11 +172,13 @@
                         <div class="col-md-6">
                             <div class="card mb-4">
                                 <div class="card-header d-flex justify-content-between align-items-center">
-                                    <button class="btn btn-sm btn-outline-secondary" id="prev-month"><i
-                                            class="bi bi-chevron-left"></i></button>
-                                    <h5 class="mb-0" id="current-month">March 2023</h5>
-                                    <button class="btn btn-sm btn-outline-secondary" id="next-month"><i
-                                            class="bi bi-chevron-right"></i></button>
+                                    <button class="btn btn-sm btn-outline-secondary" id="prev-month">
+                                        <i class="bi bi-chevron-left"></i>
+                                    </button>
+                                    <h5 class="mb-0" id="current-month"></h5>
+                                    <button class="btn btn-sm btn-outline-secondary" id="next-month">
+                                        <i class="bi bi-chevron-right"></i>
+                                    </button>
                                 </div>
                                 <div class="card-body">
                                     <table class="table table-calendar">
@@ -188,7 +241,7 @@
                             </div>
                             <div class="summary-item">
                                 <div class="row">
-                                    <div class="col-md-4 text-muted">Staff Member:</div>
+                                    <div class="col-md-4 text-muted">Doctor:</div>
                                     <div class="col-md-8" id="summary-employee"></div>
                                 </div>
                             </div>
@@ -214,6 +267,7 @@
                             <div class="mt-4">
                                 <h5>Your Information</h5>
                                 <form id="customer-info-form">
+
                                     @csrf
                                     <div class="row g-3">
                                         <div class="col-md-6">
@@ -241,21 +295,50 @@
             </div>
 
             <div class="booking-footer">
-                <button class="btn btn-outline-secondary" id="prev-step" disabled>
+                <button class="btn btn-outline-primary" id="prev-step" disabled>
                     <i class="bi bi-arrow-left"></i> Previous
                 </button>
-                <button class="btn btn-primary" id="next-step">
+                <button class="btn btn-outline-primary" id="next-step">
                     Next <i class="bi bi-arrow-right"></i>
                 </button>
             </div>
         </div>
     </div>
 
-    <footer>
-        <div class="container pb-2">
-            <div class="row text-center">
-            <span>Designed & Developed by <a target="_blank" href="https://www.vfixtechnology.com">VFIX TECHNOLOGY</a></span>
+    <!-- Footer Section -->
+    <footer class="bg-secondary text-white pt-4 pb-3 mt-5">
+        <div class="container">
+
+            <div class="row text-center text-md-start">
+                <div class="col-md-8 mb-3">
+                    <h5 class="fw-bold">Flores Memorial Medical Center</h5>
+                    <p class="mb-1">16 Abauag St, Santiago, 3311 Isabela</p>
+                    <p class="mb-1">MHR2+49 Santiago, Isabela</p>
+                    <p>Email: fmmc@gmail.com</p>
+                    <p>Phone: 0783051255 | +63 123 456 7890</p>
+                </div>
+            
+                <div class="col-md-4 mb-3 text-md-start">
+                    <h5 class="fw-bold">Follow Us</h5>
+                    <a href="https://www.facebook.com/OfficialFMMC" target="_blank" class="text-white me-3"><i class="fab fa-facebook fa-lg"></i></a>
+                    <a href="#" target="_blank" class="text-white me-3"><i class="fab fa-twitter fa-lg"></i></a>
+                    <a href="#" target="_blank" class="text-white me-3"><i class="fab fa-instagram fa-lg"></i></a>
+                    <a href="#" target="_blank" class="text-white"><i class="fab fa-linkedin fa-lg"></i></a>
+                </div>
             </div>
+
+            <div class="row mt-3">
+                <div class="col text-center">
+                    <span class="fw-light">
+                        © 2025 <strong>Flores Memorial Medical Center</strong> | 
+                        Designed & Developed by 
+                        <a target="_blank" href="#" class="text-warning text-decoration-none">
+                            Techro Technology
+                        </a>
+                    </span>
+                </div>
+            </div>
+            
         </div>
     </footer>
 
@@ -291,31 +374,27 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         $(document).ready(function() {
-
             const categories = @json($categories);
-
             const container = $('#categories-container'); // Target the container by ID
 
             let html = '';
             $.each(categories, function(index, category) {
                 html += `
-            <div class="col">
-                <div class="card border h-100 category-card text-center rounded p-2" data-category="${category.id}">
-                    <div class="card-body">
-                         ${category.image ? `<img class="img-fluid w-25 mb-2" src="uploads/images/category/${category.image}">` : ""}
-                        <h5 class="card-title">${category.title}</h5>
-                        <p class="card-text">${category.body}</p>
+                <div class="col">
+                    <div class="card border h-100 category-card text-center rounded p-2" data-category="${category.id}">
+                        <div class="card-body">
+                            ${category.image ? `<img class="img-fluid w-25 mb-2" src="uploads/images/category/${category.image}">` : ""}
+                            <h5 class="card-title">${category.title}</h5>
+                            <p class="card-text">${category.body}</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-        `;
+                `;
             });
 
             container.html(html); // Insert all generated HTML at once
 
-
             const employees = @json($employees);
-            // console.log(employees);
 
             // Booking state
             let bookingState = {
@@ -364,10 +443,8 @@
                 $(this).addClass("selected");
 
                 const categoryId = $(this).data("category");
-                // console.log(categoryId);
+                
                 bookingState.selectedCategory = categoryId;
-
-                // Reset subsequent selections
                 bookingState.selectedService = null;
                 bookingState.selectedEmployee = null;
                 bookingState.selectedDate = null;
@@ -384,7 +461,6 @@
 
                 const serviceId = $(this).data("service");
                 const serviceTitle = $(this).find('.card-title').text();
-                // const servicePrice = $(this).find('.fw-bold').text().replace('$', '');
                 const servicePrice = $(this).find('.fw-bold').text();
                 const serviceDuration = $(this).find('.card-text:contains("Duration:")').text().replace(
                     'Duration: ', '');
@@ -406,17 +482,17 @@
                 $(".employee-card").removeClass("selected");
                 $("#selected-date").text("");
                 $("#selected-time").text("");
-                $("#employees-container").empty(); // Clear previous employees while loading new ones
+                $("#employees-container").empty(); 
 
-                // Show loading state for employees
+                // Show loading state for doctors
                 $("#employees-container").html(
                     '<div class="col-12 text-center py-5"><div class="spinner-border text-primary" role="status"></div></div>'
                 );
 
-                // Update the employee step with employees for this service
+                // Update the doctor step with doctors for this service
                 updateEmployeesStep(serviceId);
 
-                // Show the employee step immediately (loading will happen inside updateEmployeesStep)
+                // Show the doctor step immediately (loading will happen inside updateEmployeesStep)
                 $("#services-step").addClass("d-none");
                 $("#employees-step").removeClass("d-none");
                 $(".step-indicator[data-step='services']").removeClass("active current").addClass(
@@ -424,13 +500,12 @@
                 $(".step-indicator[data-step='employees']").addClass("active current");
             });
 
-            // Employee selection
+            // Doctor selection
             $(document).on("click", ".employee-card", function() {
                 $(".employee-card").removeClass("selected");
                 $(this).addClass("selected");
 
                 const employeeId = $(this).data("employee");
-                // alert(employeeId);
                 const employee = employees.find(e => e.id === employeeId);
 
                 bookingState.selectedEmployee = employee;
@@ -443,7 +518,6 @@
                 updateCalendar();
             });
 
-
             // Date selection
             $(document).on("click", ".calendar-day:not(.disabled)", function() {
                 $(".calendar-day").removeClass("selected");
@@ -455,7 +529,7 @@
                 // Reset time selection
                 bookingState.selectedTime = null;
 
-                // Update time slots based on employee availability
+                // Update time slots based on doctor availability
                 updateTimeSlots(date);
             });
 
@@ -516,12 +590,10 @@
                 });
             }
 
-
             function updateProgressBar() {
                 const progress = ((bookingState.currentStep - 1) / 4) * 100;
                 $(".progress-bar-steps .progress").css("width", `${progress}%`);
             }
-
 
             function updateNavigationButtons() {
                 // Enable/disable previous button
@@ -539,7 +611,6 @@
                 }
             }
 
-
             function validateStep(step) {
                 switch (step) {
                     case 1:
@@ -556,7 +627,7 @@
                         return true;
                     case 3:
                         if (!bookingState.selectedEmployee) {
-                            alert("Please select a staff member");
+                            alert("Please select a doctor");
                             return false;
                         }
                         return true;
@@ -574,7 +645,6 @@
                         return true;
                 }
             }
-
 
             function updateServicesStep(categoryId) {
                 // Show loading state if needed
@@ -642,15 +712,13 @@
                 });
             }
 
-
-
             function updateEmployeesStep(serviceId) {
                 // Show loading state
                 $("#employees-container").html(
                     '<div class="text-center py-5"><div class="spinner-border text-primary" role="status"></div></div>'
                 );
 
-                // Make AJAX request to get employees for this service
+                // Make AJAX request to get doctors for this service
                 $.ajax({
                     url: `/services/${serviceId}/employees`,
                     type: 'GET',
@@ -677,10 +745,10 @@
                                 `Selected Service: ${service.title} (${bookingState.selectedService.price})`
                                 );
 
-                            // Clear employees container
+                            // Clear doctors container
                             $("#employees-container").empty();
 
-                            // Add employees with animation delay
+                            // Add doctors with animation delay
                             employees.forEach((employee, index) => {
                                 const employeeCard = `
                                 <div class="col animate-slide-in" style="animation-delay: ${index * 100}ms">
@@ -693,7 +761,7 @@
                                                 }
                                             </div>
                                             <h5 class="card-title">${employee.user.name}</h5>
-                                            <p class="card-text text-muted">${employee.position || 'Professional'}</p>
+                                            <p class="card-text text-muted">${employee.position || 'Doctor'}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -702,14 +770,14 @@
                             });
                         } else {
                             $("#employees-container").html(
-                                '<div class="col-12 text-center py-5"><p>No employees available for this service.</p></div>'
+                                '<div class="col-12 text-center py-5"><p>No doctors are available for this service.</p></div>'
                             );
                         }
                     },
                     error: function(xhr) {
                         console.error(xhr);
                         $("#employees-container").html(
-                            '<div class="col-12 text-center py-5"><p>Error loading employees. Please try again.</p></div>'
+                            '<div class="col-12 text-center py-5"><p>Error loading doctors. Please try again.</p></div>'
                         );
                     }
                 });
@@ -802,11 +870,10 @@
                 renderCalendar(month, yearNum);
             }
 
-
             function updateCalendar() {
-                // Update employee name display
+                // Update Doctor name display
                 const employee = bookingState.selectedEmployee;
-                $(".selected-employee-name").text(`Selected Staff: ${employee.user.name}`);
+                $(".selected-employee-name").text(`Selected Doctor: ${employee.user.name}`);
 
                 // Clear previous selections
                 bookingState.selectedDate = null;
@@ -816,18 +883,18 @@
 
                 // Show loading state for time slots
                 $("#time-slots-container").html(`
-                <div class="text-center w-100 py-4">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Loading...</span>
+                    <div class="text-center w-100 py-4">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
                     </div>
-                </div>
-            `);
+                `);
             }
 
             function updateCalendar() {
-                // Update employee name display
+                // Update doctor name display
                 const employee = bookingState.selectedEmployee;
-                $(".selected-employee-name").text(`Selected Staff: ${employee.user.name}`);
+                $(".selected-employee-name").text(`Selected Doctor: ${employee.user.name}`);
 
                 // Clear previous selections
                 bookingState.selectedDate = null;
@@ -849,13 +916,13 @@
             function updateTimeSlots(selectedDate) {
                 if (!selectedDate) {
                     $("#time-slots-container").html(`
-                    <div class="text-center w-100 py-4">
-                        <div class="alert alert-warning">
-                            <i class="bi bi-exclamation-triangle me-2"></i>
-                            No date selected
+                        <div class="text-center w-100 py-4">
+                            <div class="alert alert-warning">
+                                <i class="bi bi-exclamation-triangle me-2"></i>
+                                No date selected
+                            </div>
                         </div>
-                    </div>
-                `);
+                    `);
                     return;
                 }
 
@@ -879,16 +946,16 @@
 
                         if (response.available_slots.length === 0) {
                             $("#time-slots-container").html(`
-                    <div class="text-center py-4">
-                        <div class="alert alert-warning">
-                            <i class="bi bi-clock-history me-2"></i>
-                            No available slots for this date
-                        </div>
-                        <button class="btn btn-sm btn-outline-primary mt-2" onclick="updateCalendar()">
-                            <i class="bi bi-arrow-left me-1"></i> Back to calendar
-                        </button>
-                    </div>
-                `);
+                                <div class="text-center py-4">
+                                    <div class="alert alert-warning">
+                                        <i class="bi bi-clock-history me-2"></i>
+                                        No available slots for this date
+                                    </div>
+                                    <button class="btn btn-sm btn-outline-primary mt-2" onclick="updateCalendar()">
+                                        <i class="bi bi-arrow-left me-1"></i> Back to calendar
+                                    </button>
+                                </div>
+                            `);
                             return;
                         }
 
@@ -901,7 +968,6 @@
                                         Each slot: ${response.slot_duration} mins
                                         ${response.break_duration ? ` | Break: ${response.break_duration} mins` : ''}
                                     </small>
-
                                 </div>
                             </div>
                         `);
@@ -943,15 +1009,13 @@
                                     Error loading availability
                                 </div>
                                 <button class="btn btn-sm btn-outline-primary mt-2" onclick="updateTimeSlots('${selectedDate}')">
-                                            <i class="bi bi-arrow-repeat me-1"></i> Try again
-                                        </button>
-                                    </div>
-                                `);
+                                    <i class="bi bi-arrow-repeat me-1"></i> Try again
+                                </button>
+                            </div>
+                        `);
                     }
                 });
             }
-
-
 
             function updateSummary() {
                 // Find the selected category
@@ -968,7 +1032,7 @@
                     $("#summary-price").text(bookingState.selectedService.price);
                 }
 
-                // Update employee info
+                // Update doctor info
                 if (bookingState.selectedEmployee) {
                     $("#summary-employee").text(bookingState.selectedEmployee.user.name);
                 }
@@ -987,10 +1051,6 @@
                 }
             }
 
-
-
-            // function submitBooking() {
-
             function submitBooking() {
                 // Get form data
                 const form = $('#customer-info-form');
@@ -1007,7 +1067,7 @@
                     amount: parseFloat(bookingState.selectedService.price.replace(/[^0-9.]/g, '')),
                     booking_date: bookingState.selectedDate,
                     booking_time: bookingState.selectedTime.start || bookingState.selectedTime,
-                    status: 'Pending payment',
+                    status: 'Pending',
                     _token: csrfToken // Include CSRF token in payload
                 };
 
@@ -1038,13 +1098,13 @@
                             });
 
                         const bookingDetails = `
-                                <div class="mb-2"><strong>Customer:</strong> ${$("#customer-name").val()}</div>
-                                <div class="mb-2"><strong>Service:</strong> ${bookingState.selectedService.title}</div>
-                                <div class="mb-2"><strong>Staff:</strong> ${bookingState.selectedEmployee.user.name}</div>
-                                <div class="mb-2"><strong>Date & Time:</strong> ${formattedDate} at ${bookingState.selectedTime.display || bookingState.selectedTime}</div>
-                                 <div class="mb-2"><strong>Amount:</strong> ${bookingState.selectedService.price}</div>
-                                <div><strong>Reference:</strong> ${response.booking_id || 'BK-' + Math.random().toString(36).substr(2, 8).toUpperCase()}</div>
-                            `;
+                            <div class="mb-2"><strong>Client:</strong> ${$("#customer-name").val()}</div>
+                            <div class="mb-2"><strong>Service:</strong> ${bookingState.selectedService.title}</div>
+                            <div class="mb-2"><strong>Doctor:</strong> ${bookingState.selectedEmployee.user.name}</div>
+                            <div class="mb-2"><strong>Date & Time:</strong> ${formattedDate} at ${bookingState.selectedTime.display || bookingState.selectedTime}</div>
+                            <div class="mb-2"><strong>Amount:</strong> ${bookingState.selectedService.price}</div>
+                            <div><strong>Reference:</strong> ${response.booking_id || 'BK-' + Math.random().toString(36).substr(2, 8).toUpperCase()}</div>
+                        `;
 
                         $('#modal-booking-details').html(bookingDetails);
 
@@ -1106,5 +1166,4 @@
         {!! $setting->footer !!}
     @endif
 </body>
-
 </html>
