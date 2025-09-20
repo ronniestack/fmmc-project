@@ -20,12 +20,10 @@
 
 @section('content')
     <div class="">
-        <!-- Content Header (Page header) -->
-        <!-- /.content-header -->
+        <div class="content py-2">
 
-        <!-- Main content -->
-        <div class="content  py-2">
             <div class="">
+                <!-- Success toast -->
                 @if (session()->has('success'))
                     <div class="alert alert-dismissable alert-success">
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -36,6 +34,8 @@
                         </strong>
                     </div>
                 @endif
+
+                <!-- Error toast -->
                 @if (count($errors) > 0)
                     <div class="alert alert-dismissable alert-danger mt-3">
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -50,69 +50,72 @@
                     </div>
                 @endif
 
-
                 <form action="{{ route('user.update', $user->id) }}" method="post">
                     @csrf
                     @method('PATCH')
                     <div class="row pl-md-2">
                         <div class="col-md-8">
                             <div class="row">
+
                                 <div class="col-xs-12 col-sm-12 col-md-12">
                                     <div class="form-group">
-                                        <label class="my-0">Name</label>
+                                        <label class="my-0">Full Name</label>
                                         <div class="input-group">
-                                            <div class="input-group-prepend ">
-                                                <span class="input-group-text ">
-                                                    <i class="fas fa-user">
-                                                    </i>
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="fas fa-user"></i>
                                                 </span>
                                             </div>
                                             <input type="text" class="form-control @error('name') is-invalid @enderror"
                                                 name="name" value="{{ old('name', $user->name) }}"
                                                 placeholder="Full Name">
                                         </div>
+
                                         @error('name')
                                             <small class="text-danger"><strong>{{ $message }}</strong></small>
                                         @enderror
                                     </div>
                                 </div>
+
                                 <div class="col-xs-12 col-sm-12 col-md-12">
                                     <div class="form-group">
                                         <label class="my-0">Email</label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">
-                                                    <i class="fas fa-envelope">
-                                                    </i>
+                                                    <i class="fas fa-envelope"></i>
                                                 </span>
                                             </div>
                                             <input type="email" class="form-control @error('email') is-invalid @enderror"
                                                 name="email" value="{{ old('email', $user->email) }}" placeholder="Email">
                                         </div>
+
                                         @error('email')
                                             <small class="text-danger"><strong>{{ $message }}</strong></small>
                                         @enderror
                                     </div>
                                 </div>
+
                                 <div class="col-xs-12 col-sm-12 col-md-12">
                                     <div class="form-group">
                                         <label class="my-0">Phone</label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">
-                                                    <i class="fas fa-phone">
-                                                    </i>
+                                                    <i class="fas fa-phone"></i>
                                                 </span>
                                             </div>
                                             <input type="tel" class="form-control @error('phone') is-invalid @enderror"
                                                 name="phone" value="{{ old('phone', $user->phone) }}"
                                                 placeholder="Phone No.">
                                         </div>
+
                                         @error('phone')
                                             <small class="text-danger"><strong>{{ $message }}</strong></small>
                                         @enderror
                                     </div>
                                 </div>
+
                                 <div class="col-xs-12 col-sm-12 col-md-12">
                                     <div class="form-group">
                                         <label class="my-0">Password</label>
@@ -126,6 +129,7 @@
                                                 class="form-control @error('password') is-invalid @enderror" name="password"
                                                 placeholder="Enter Password">
                                         </div>
+
                                         @error('password')
                                             <small class="text-danger"><strong>{{ $message }}</strong></small>
                                         @enderror
@@ -145,6 +149,7 @@
                                                 class="form-control @error('password_confirmation') is-invalid @enderror"
                                                 name="password_confirmation" placeholder="Confirm Password">
                                         </div>
+
                                         @error('password_confirmation')
                                             <small class="text-danger"><strong>{{ $message }}</strong></small>
                                         @enderror
@@ -163,6 +168,7 @@
                                             </option>
                                         @endforeach
                                     </select>
+
                                     @error('roles')
                                         <small class="text-danger"><strong>{{ $message }}</strong></small>
                                     @enderror
@@ -172,10 +178,10 @@
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <div class="custom-control custom-switch">
-                                                {{-- Hidden field to ensure "0" is submitted if checkbox is unchecked --}}
+                                                <!-- Hidden field to ensure "0" is submitted if checkbox is unchecked -->
                                                 <input type="hidden" name="status" value="0">
 
-                                                {{-- Actual checkbox --}}
+                                                <!-- Actual checkbox -->
                                                 <input type="checkbox" class="custom-control-input" id="status"
                                                     name="status" value="1"
                                                     {{ old('status', $user->status) ? 'checked' : '' }}>
@@ -186,9 +192,6 @@
                                     </div>
                                 </div>
 
-
-
-
                             </div>
                         </div>
                     </div>
@@ -197,22 +200,23 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <div class="custom-control custom-switch">
-                                    <!-- If user has the employee or moderator role, check the checkbox -->
+                                    <!-- If user has the doctor role, check the checkbox -->
                                     <input type="checkbox" class="custom-control-input" id="is_employee"
                                         name="is_employee" @if ($user->employee == true) checked @endif>
-                                    <label class="custom-control-label" for="is_employee">Is Employee</label>
+                                    <label class="custom-control-label" for="is_employee">Form for Doctor</label>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                     <div id="employee" class="row pl-md-2 pb-5">
                         <div class="col-md-8">
                             <div class="row">
                                 <div class="col-md-12">
                                     <hr>
                                     <div class="mb-3">
-                                        <h4 class="mb-0">Only For Employees </h4>
-                                        <small class="text-muted">Fill these details if adding an employee only</small>
+                                        <h4 class="mb-0">Only For Doctors</h4>
+                                        <small class="text-muted">Fill these details if adding an doctor only</small>
                                     </div>
 
                                     <div class="row">
@@ -220,9 +224,9 @@
                                             <label for="service_id" class="my-0">
                                                 <i class="fas fa-id-card"></i> Select Service
                                             </label>
-                                            <small class="text-muted"> Link employees to services they are assigned
-                                                to</small>
-
+                                            <small class="text-muted">
+                                                Link doctors to services they are assigned to
+                                            </small>
                                             <select class="form-control servicesSelect2 @error('service[]') is-invalid @enderror"
                                                 name="service[]" data-placeholder="Select Service" id="service"
                                                 multiple>
@@ -243,16 +247,15 @@
                                             <label for="slot_duration" class="my-0">
                                                 <i class="fas fa-stopwatch"></i> Service Duration
                                             </label>
-                                            <small class="text-muted"> Create booking slots based on your preferred time
-                                                duration.</small>
-
+                                            <small class="text-muted">
+                                                Create booking slots based on your preferred time duration.
+                                            </small>
                                             <select class="form-control @error('slot_duration') is-invalid @enderror"
                                                 name="slot_duration" id="slot_duration">
                                                 <option value=""
                                                     {{ old('slot_duration', optional($user->employee)->slot_duration) == '' ? 'selected' : '' }}>
                                                     Select Duration
                                                 </option>
-
                                                 @foreach ($steps as $stepValue)
                                                     <option value="{{ $stepValue }}"
                                                         {{ old('slot_duration', optional($user->employee)->slot_duration) == $stepValue ? 'selected' : '' }}>
@@ -261,26 +264,24 @@
                                                 @endforeach
                                             </select>
 
-
                                             @error('slot_duration')
                                                 <small class="text-danger"><strong>{{ $message }}</strong></small>
                                             @enderror
                                         </div>
 
-
                                         <div class="col-xs-12 col-sm-12 col-md-12 mb-3">
                                             <label for="break_duration" class="my-0">
                                                 <i class="fas fa-coffee"></i> Preparation or Break time
                                             </label>
-                                            <small class="text-muted"> Break between one to another appointment</small>
-
+                                            <small class="text-muted">
+                                                Break between one to another appointment
+                                            </small>
                                             <select class="form-control @error('break_duration') is-invalid @enderror"
                                                 name="break_duration" id="break_duration">
                                                 <option value=""
                                                     {{ old('break_duration', optional($user->employee)->break_duration) == '' ? 'selected' : '' }}>
                                                     No Break
                                                 </option>
-
                                                 @foreach ($breaks as $breakValue)
                                                     <option value="{{ $breakValue }}"
                                                         {{ old('break_duration', optional($user->employee)->break_duration) == $breakValue ? 'selected' : '' }}>
@@ -293,18 +294,15 @@
                                                 <small class="text-danger"><strong>{{ $message }}</strong></small>
                                             @enderror
                                         </div>
-
-
-
                                     </div>
-
                                     <hr>
+
                                     <div class="row">
                                         <div class="mb-3">
-                                            <h4 class="mb-0">Set Availability - For Employee</h4>
+                                            <h4 class="mb-0">Set Availability - For Doctor</h4>
                                             <small class="text-muted">
                                                 Select days and timings, with the option to add multiple time slots in a
-                                                day, e.g., 9 AM–12 PM and 4 PM–8 PM.
+                                                day, (e.g., 9AM – 12PM and 4PM – 8PM.)
                                             </small>
                                         </div>
 
@@ -379,8 +377,6 @@
                                                                             Remove</div>
                                                                     </div>
                                                                 </div>
-
-
                                                             </div>
                                                         @endif
                                                     @endforeach
@@ -388,70 +384,66 @@
                                             @endforeach
                                         </div>
                                     </div>
-
-
                                     <hr>
 
                                     <div class="row d-flex">
                                         <div class="col-md-10">
-                                            <h2 class="mb-0">Add Holidays</h2>
+                                            <h4 class="mb-0">Additional availability</h4>
                                             <p class="text-muted">
-                                                No need to add time for a full day; for part-time work, specify the day and
-                                                time.
+                                                No need to add time for a full day; for part-time work, specify the day and time.
                                             </p>
                                             <span id="addHoliday" class="btn btn-primary mb-2 btn-sm">
-                                                <i class="fa fa-plus"></i> Add Holiday
+                                                <i class="fa fa-plus"></i> Add Availability
                                             </span>
                                             <div class="holidayContainer">
                                                 @php
-                                                    // Get holidays from old input or database
+                                                    // Get availability from old input or database
                                                     $holidaysInput = old('holidays.date', []);
                                                     $dbHolidays = $user->employee->holidays ?? [];
                                                     $holidaysToDisplay = !empty($holidaysInput)
                                                         ? $holidaysInput
                                                         : $dbHolidays;
                                                 @endphp
-
                                                 @forelse($holidaysToDisplay as $index => $holidayItem)
-                                                    @php
-                                                        // Determine if we're using old input or database data
-$usingOldInput = !empty($holidaysInput);
+                                                @php
+                                                    // Determine if we're using old input or database data
+                                                    $usingOldInput = !empty($holidaysInput);
 
-if ($usingOldInput) {
-    $date = old("holidays.date.$index");
-    $holiday = null;
-} else {
-    $holiday = $holidayItem;
-    $date = $holiday->date;
-    // Format date for input field if it's not already in YYYY-MM-DD format
-                                                            if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
-                                                                try {
-                                                                    $date = \Carbon\Carbon::parse($date)->format(
-                                                                        'Y-m-d',
-                                                                    );
-                                                                } catch (Exception $e) {
-                                                                    $date = '';
-                                                                }
+                                                    if ($usingOldInput) {
+                                                        $date = old("holidays.date.$index");
+                                                        $holiday = null;
+                                                    } else {
+                                                        $holiday = $holidayItem;
+                                                        $date = $holiday->date;
+                                                        // Format date for input field if it's not already in YYYY-MM-DD format
+                                                        if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
+                                                            try {
+                                                                $date = \Carbon\Carbon::parse($date)->format(
+                                                                    'Y-m-d',
+                                                                );
+                                                            } catch (Exception $e) {
+                                                                $date = '';
                                                             }
                                                         }
+                                                    }
 
-                                                        $fromTime = old(
-                                                            "holidays.from_time.$index",
-                                                            $holiday && $holiday->hours
-                                                                ? explode('-', $holiday->hours[0])[0] ?? ''
-                                                                : '',
-                                                        );
-                                                        $toTime = old(
-                                                            "holidays.to_time.$index",
-                                                            $holiday && $holiday->hours
-                                                                ? explode('-', $holiday->hours[0])[1] ?? ''
-                                                                : '',
-                                                        );
-                                                        $recurring = old(
-                                                            "holidays.recurring.$index",
-                                                            $holiday->recurring ?? 0,
-                                                        );
-                                                    @endphp
+                                                    $fromTime = old(
+                                                        "holidays.from_time.$index",
+                                                        $holiday && $holiday->hours
+                                                            ? explode('-', $holiday->hours[0])[0] ?? ''
+                                                            : '',
+                                                    );
+                                                    $toTime = old(
+                                                        "holidays.to_time.$index",
+                                                        $holiday && $holiday->hours
+                                                            ? explode('-', $holiday->hours[0])[1] ?? ''
+                                                            : '',
+                                                    );
+                                                    $recurring = old(
+                                                        "holidays.recurring.$index",
+                                                        $holiday->recurring ?? 0,
+                                                    );
+                                                @endphp
                                                     <div class="row holiday-row">
                                                         <div class="col-md-4">
                                                             <div class="form-group">
@@ -461,6 +453,7 @@ if ($usingOldInput) {
                                                                     required>
                                                             </div>
                                                         </div>
+
                                                         <div class="col-md-3">
                                                             <div class="form-group">
                                                                 <strong>From:</strong>
@@ -469,6 +462,7 @@ if ($usingOldInput) {
                                                                     value="{{ $fromTime }}">
                                                             </div>
                                                         </div>
+
                                                         <div class="col-md-3">
                                                             <div class="form-group">
                                                                 <strong>To:</strong>
@@ -485,7 +479,8 @@ if ($usingOldInput) {
                                                             value="{{ $recurring }}">
                                                     </div>
                                                 @empty
-                                                    <p>No holidays found for this user. Click "Add Holiday" to create one.
+                                                    <p>
+                                                        No other availabilities found for this user. Click "Add availability" to create one.
                                                     </p>
                                                 @endforelse
                                             </div>
@@ -495,30 +490,18 @@ if ($usingOldInput) {
                             </div>
                         </div>
                     </div>
-
-
-                    {{-- <div class="col-xs-12 col-sm-12 col-md-12 pt-2 pl-md-3">
-                        <button type="submit" class="btn btn-danger"
-                            onclick="return confirm('Are you sure you want to update this user?')">Update user</button>
-                    </div> --}}
+                </form>
             </div>
+
             <div class="col-xs-12 col-sm-12 col-md-12 pt-2 pl-md-3">
                 <button type="submit" class="btn btn-danger"
-                    onclick="return confirm('Are you sure you want to update this user?')">Update user</button>
+                    onclick="return confirm('Are you sure you want to update this user?')">
+                    Update user
+                </button>
             </div>
+
         </div>
     </div>
-    </div>
-    </div>
-
-
-
-    </form>
-    </div>
-    </div>
-    </div>
-    </div>
-
 @stop
 
 @section('css')
@@ -526,7 +509,6 @@ if ($usingOldInput) {
 @stop
 
 @section('js')
-
     <script>
         // In your Javascript (external .js resource or <script> tag)
         $(document).ready(function() {
@@ -634,7 +616,7 @@ if ($usingOldInput) {
 
     <script>
         $(document).ready(function() {
-            // Add new holiday row
+            // Additional availability row
             $('#addHoliday').click(function() {
                 const holidayRow = `
                 <div class="row holiday-row">
@@ -662,14 +644,10 @@ if ($usingOldInput) {
                 $('.holidayContainer').append(holidayRow);
             });
 
-            // Remove holiday row
+            // Remove availability row
             $(document).on('click', '.removeHoliday', function() {
                 $(this).closest('.holiday-row').remove();
             });
         });
     </script>
-
-
-
-
 @stop
