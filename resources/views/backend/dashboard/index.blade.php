@@ -4,26 +4,6 @@
 
 @section('content_header')
     <h1>Calendar</h1>
-
-    <!-- Success toast -->
-    @if (session('success'))
-        <div class="alert alert-success alert-dismissable mt-2">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            <strong>{{ session('success') }}</strong>
-        </div>
-    @endif
-
-    <!-- Error toast -->
-    @if (session('error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            {{ session('error') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    @endif
 @stop
 
 @section('content')
@@ -37,8 +17,7 @@
     </div>
 
     <!-- Appointment modal details -->
-    <form id="appointmentStatusForm" method="POST" action="{{ route('dashboard.update.status') }}"
-        onsubmit="return confirm('Are you sure you want to update the booking status?')">
+    <form id="appointmentStatusForm" method="POST" action="{{ route('dashboard.update.status') }}">
 
         @csrf
         <input type="hidden" name="appointment_id" id="modalAppointmentId">
@@ -66,15 +45,15 @@
                         <div class="form-group">
                             <label><strong>Change Status:</strong></label>
                             <select name="status" class="form-control" id="modalStatusSelect">
-                                <option value="Pending">Pending</option>
-                                <option value="Confirmed">Confirmed</option>
+                                <option value="Booked">Booked</option>
+                                <option value="Rendered">Rendered</option>
                                 <option value="Cancelled">Cancelled</option>
                             </select>
                         </div>
                     </div>
 
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-danger">Update Status</button>
+                        <button type="submit" class="btn btn-success">Update Status</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </div>
@@ -163,8 +142,10 @@
 @section('js')
     <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.10.2/dist/fullcalendar.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
+        // Calendar function
         $(document).ready(function() {
             $('#calendar').fullCalendar({
                 header: {
@@ -198,12 +179,12 @@
                     $('#modalStartTime').text(moment(calEvent.start).format('MMMM D, YYYY h:mm A'));
                     $('#modalEndTime').text(calEvent.end ? moment(calEvent.end).format('MMMM D, YYYY h:mm A') : 'N/A');
 
-                    var status = calEvent.status || 'Pending';
+                    var status = calEvent.status || 'Booked';
                     $('#modalStatusSelect').val(status);
 
                     var statusColors = {
-                        'Pending': '#f39c12',
-                        'Confirmed': '#2ecc71',
+                        'Booked': '#3498db',
+                        'Rendered': '#2ecc71',
                         'Cancelled': '#ff0000',
                     };
 
@@ -216,11 +197,46 @@
                 }
             });
         });
-    </script>
 
-    <script>
-        $(document).ready(function() {
-            $(".alert").delay(2000).slideUp(300);
+        // Sweet alert toast confirmation
+        $("#appointmentStatusForm").on("submit", function(e){
+            e.preventDefault();
+        
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You want to update the booking status?",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, update it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.submit();
+                }
+            });
         });
+    
+
+        // Success toast
+        @if (session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: "{{ session('success') }}",
+                timer: 2000,
+                showConfirmButton: false
+            });
+        @endif
+        // Error toast
+        @if (session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: "{{ session('error') }}",
+                timer: 2000,
+                showConfirmButton: false
+            });
+        @endif
     </script>
 @stop
