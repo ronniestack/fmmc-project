@@ -158,7 +158,7 @@
                 <div class="booking-step" id="step3">
                     <h3 class="mb-4">Select a Doctor</h3>
                     <div class="selected-service-name mb-3 fw-bold"></div>
-                    <div class="row row-cols-1 row-cols-md-3 g-4" id="employees-container">
+                    <div class="row row-cols-1 row-cols-md-3 g-4" id="doctors-container">
                         <!-- Doctor will be loaded dynamically based on service -->
                     </div>
                 </div>
@@ -166,7 +166,7 @@
                 <!-- Step 4: Date and Time Selection -->
                 <div class="booking-step" id="step4">
                     <h3 class="mb-4">Select Date & Time</h3>
-                    <div class="selected-employee-name mb-3 fw-bold"></div>
+                    <div class="selected-doctor-name mb-3 fw-bold"></div>
 
                     <div class="row">
                         <div class="col-md-6">
@@ -242,7 +242,7 @@
                             <div class="summary-item">
                                 <div class="row">
                                     <div class="col-md-4 text-muted">Doctor:</div>
-                                    <div class="col-md-8" id="summary-employee"></div>
+                                    <div class="col-md-8" id="summary-doctor"></div>
                                 </div>
                             </div>
                             <div class="summary-item">
@@ -394,14 +394,14 @@
 
             container.html(html); // Insert all generated HTML at once
 
-            const employees = @json($employees);
+            const doctors = @json($doctors);
 
             // Booking state
             let bookingState = {
                 currentStep: 1,
                 selectedCategory: null,
                 selectedService: null,
-                selectedEmployee: null,
+                selectedDoctor: null,
                 selectedDate: null,
                 selectedTime: null
             };
@@ -446,7 +446,7 @@
                 
                 bookingState.selectedCategory = categoryId;
                 bookingState.selectedService = null;
-                bookingState.selectedEmployee = null;
+                bookingState.selectedDoctor = null;
                 bookingState.selectedDate = null;
                 bookingState.selectedTime = null;
 
@@ -474,41 +474,41 @@
                 };
 
                 // Reset subsequent selections
-                bookingState.selectedEmployee = null;
+                bookingState.selectedDoctor = null;
                 bookingState.selectedDate = null;
                 bookingState.selectedTime = null;
 
                 // Clear previous selections UI
-                $(".employee-card").removeClass("selected");
+                $(".doctor-card").removeClass("selected");
                 $("#selected-date").text("");
                 $("#selected-time").text("");
-                $("#employees-container").empty(); 
+                $("#doctors-container").empty(); 
 
                 // Show loading state for doctors
-                $("#employees-container").html(
+                $("#doctors-container").html(
                     '<div class="col-12 text-center py-5"><div class="spinner-border text-primary" role="status"></div></div>'
                 );
 
                 // Update the doctor step with doctors for this service
-                updateEmployeesStep(serviceId);
+                updateDoctorsStep(serviceId);
 
-                // Show the doctor step immediately (loading will happen inside updateEmployeesStep)
+                // Show the doctor step immediately (loading will happen inside updateDoctorsStep)
                 $("#services-step").addClass("d-none");
-                $("#employees-step").removeClass("d-none");
+                $("#doctors-step").removeClass("d-none");
                 $(".step-indicator[data-step='services']").removeClass("active current").addClass(
                     "completed");
-                $(".step-indicator[data-step='employees']").addClass("active current");
+                $(".step-indicator[data-step='doctors']").addClass("active current");
             });
 
             // Doctor selection
-            $(document).on("click", ".employee-card", function() {
-                $(".employee-card").removeClass("selected");
+            $(document).on("click", ".doctor-card", function() {
+                $(".doctor-card").removeClass("selected");
                 $(this).addClass("selected");
 
-                const employeeId = $(this).data("employee");
-                const employee = employees.find(e => e.id === employeeId);
+                const doctorId = $(this).data("doctor");
+                const doctor = doctors.find(e => e.id === doctorId);
 
-                bookingState.selectedEmployee = employee;
+                bookingState.selectedDoctor = doctor;
 
                 // Reset subsequent selections
                 bookingState.selectedDate = null;
@@ -626,7 +626,7 @@
                         }
                         return true;
                     case 3:
-                        if (!bookingState.selectedEmployee) {
+                        if (!bookingState.selectedDoctor) {
                             alert("Please select a doctor");
                             return false;
                         }
@@ -712,20 +712,20 @@
                 });
             }
 
-            function updateEmployeesStep(serviceId) {
+            function updateDoctorsStep(serviceId) {
                 // Show loading state
-                $("#employees-container").html(
+                $("#doctors-container").html(
                     '<div class="text-center py-5"><div class="spinner-border text-primary" role="status"></div></div>'
                 );
 
                 // Make AJAX request to get doctors for this service
                 $.ajax({
-                    url: `/services/${serviceId}/employees`,
+                    url: `/services/${serviceId}/doctors`,
                     type: 'GET',
                     dataType: 'json',
                     success: function(response) {
-                        if (response.success && response.employees) {
-                            const employees = response.employees;
+                        if (response.success && response.doctors) {
+                            const doctors = response.doctors;
                             const service = response.service;
 
                             // Determine the price display
@@ -746,37 +746,37 @@
                                 );
 
                             // Clear doctors container
-                            $("#employees-container").empty();
+                            $("#doctors-container").empty();
 
                             // Add doctors with animation delay
-                            employees.forEach((employee, index) => {
-                                const employeeCard = `
+                            doctors.forEach((doctor, index) => {
+                                const doctorCard = `
                                 <div class="col animate-slide-in" style="animation-delay: ${index * 100}ms">
-                                    <div class="card border h-100 employee-card text-center p-2" data-employee="${employee.id}">
+                                    <div class="card border h-100 doctor-card text-center p-2" data-doctor="${doctor.id}">
                                         <div class="card-body">
                                             <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px;">
-                                                ${employee.user.image ?
-                                                    `<img src="uploads/images/profile/${employee.user.image}" class="rounded-circle" style="width: 80px; height: 80px; object-fit: cover;">` :
+                                                ${doctor.user.image ?
+                                                    `<img src="uploads/images/profile/${doctor.user.image}" class="rounded-circle" style="width: 80px; height: 80px; object-fit: cover;">` :
                                                     `<i class="bi bi-person text-primary" style="font-size: 2rem;"></i>`
                                                 }
                                             </div>
-                                            <h5 class="card-title">${employee.user.name}</h5>
-                                            <p class="card-text text-muted">${employee.position || 'Doctor'}</p>
+                                            <h5 class="card-title">${doctor.user.name}</h5>
+                                            <p class="card-text text-muted">${doctor.position || 'Doctor'}</p>
                                         </div>
                                     </div>
                                 </div>
                             `;
-                                $("#employees-container").append(employeeCard);
+                                $("#doctors-container").append(doctorCard);
                             });
                         } else {
-                            $("#employees-container").html(
+                            $("#doctors-container").html(
                                 '<div class="col-12 text-center py-5"><p>No doctors are available for this service.</p></div>'
                             );
                         }
                     },
                     error: function(xhr) {
                         console.error(xhr);
-                        $("#employees-container").html(
+                        $("#doctors-container").html(
                             '<div class="col-12 text-center py-5"><p>Error loading doctors. Please try again.</p></div>'
                         );
                     }
@@ -795,7 +795,7 @@
                 const firstDay = new Date(year, month, 1);
                 const lastDay = new Date(year, month + 1, 0);
                 const daysInMonth = lastDay.getDate();
-                const startingDay = firstDay.getDay(); // 0 = Sunday
+                const startingDay = firstDay.getDay(); 
 
                 // Update month display
                 const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August",
@@ -872,8 +872,8 @@
 
             function updateCalendar() {
                 // Update Doctor name display
-                const employee = bookingState.selectedEmployee;
-                $(".selected-employee-name").text(`Selected Doctor: ${employee.user.name}`);
+                const doctor = bookingState.selectedDoctor;
+                $(".selected-doctor-name").text(`Selected Doctor: ${doctor.user.name}`);
 
                 // Clear previous selections
                 bookingState.selectedDate = null;
@@ -893,8 +893,8 @@
 
             function updateCalendar() {
                 // Update doctor name display
-                const employee = bookingState.selectedEmployee;
-                $(".selected-employee-name").text(`Selected Doctor: ${employee.user.name}`);
+                const doctor = bookingState.selectedDoctor;
+                $(".selected-doctor-name").text(`Selected Doctor: ${doctor.user.name}`);
 
                 // Clear previous selections
                 bookingState.selectedDate = null;
@@ -926,7 +926,7 @@
                     return;
                 }
 
-                const employeeId = bookingState.selectedEmployee.id;
+                const doctorId = bookingState.selectedDoctor.id;
                 const apiDate = new Date(selectedDate).toISOString().split('T')[0];
 
                 // Show loading state only when actually fetching
@@ -940,7 +940,7 @@
                 `);
 
                 $.ajax({
-                    url: `/employees/${employeeId}/availability/${apiDate}`,
+                    url: `/doctors/${doctorId}/availability/${apiDate}`,
                     success: function(response) {
                         $("#time-slots-container").empty();
 
@@ -1028,13 +1028,13 @@
                 if (bookingState.selectedService) {
                     $("#summary-service").text(
                         `${bookingState.selectedService.title} (${bookingState.selectedService.price})`);
-                    $("#summary-duration").text(`${bookingState.selectedEmployee.slot_duration} minutes`);
+                    $("#summary-duration").text(`${bookingState.selectedDoctor.slot_duration} minutes`);
                     $("#summary-price").text(bookingState.selectedService.price);
                 }
 
                 // Update doctor info
-                if (bookingState.selectedEmployee) {
-                    $("#summary-employee").text(bookingState.selectedEmployee.user.name);
+                if (bookingState.selectedDoctor) {
+                    $("#summary-doctor").text(bookingState.selectedDoctor.user.name);
                 }
 
                 // Update date/time info
@@ -1058,7 +1058,7 @@
 
                 // Prepare booking data
                 const bookingData = {
-                    employee_id: bookingState.selectedEmployee.id,
+                    doctor_id: bookingState.selectedDoctor.id,
                     service_id: bookingState.selectedService.id,
                     name: $('#customer-name').val(),
                     email: $('#customer-email').val(),
@@ -1067,7 +1067,7 @@
                     amount: parseFloat(bookingState.selectedService.price.replace(/[^0-9.]/g, '')),
                     booking_date: bookingState.selectedDate,
                     booking_time: bookingState.selectedTime.start || bookingState.selectedTime,
-                    status: 'Pending',
+                    status: 'Booked',
                     _token: csrfToken // Include CSRF token in payload
                 };
 
@@ -1100,7 +1100,7 @@
                         const bookingDetails = `
                             <div class="mb-2"><strong>Client:</strong> ${$("#customer-name").val()}</div>
                             <div class="mb-2"><strong>Service:</strong> ${bookingState.selectedService.title}</div>
-                            <div class="mb-2"><strong>Doctor:</strong> ${bookingState.selectedEmployee.user.name}</div>
+                            <div class="mb-2"><strong>Doctor:</strong> ${bookingState.selectedDoctor.user.name}</div>
                             <div class="mb-2"><strong>Date & Time:</strong> ${formattedDate} at ${bookingState.selectedTime.display || bookingState.selectedTime}</div>
                             <div class="mb-2"><strong>Amount:</strong> ${bookingState.selectedService.price}</div>
                             <div><strong>Reference:</strong> ${response.booking_id || 'BK-' + Math.random().toString(36).substr(2, 8).toUpperCase()}</div>
@@ -1146,13 +1146,13 @@
                     currentStep: 1,
                     selectedCategory: null,
                     selectedService: null,
-                    selectedEmployee: null,
+                    selectedDoctor: null,
                     selectedDate: null,
                     selectedTime: null
                 };
 
                 // Reset UI
-                $(".category-card, .service-card, .employee-card, .calendar-day, .time-slot").removeClass(
+                $(".category-card, .service-card, .doctor-card, .calendar-day, .time-slot").removeClass(
                     "selected");
                 $("#customer-info-form")[0].reset();
 
