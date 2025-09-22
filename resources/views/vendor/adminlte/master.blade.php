@@ -96,15 +96,15 @@
     @yield('body')
 
 
-   <footer class="main-footer @if(Route::is('login','register','password.confirm','password.update','password.reset','password.request')) mx-auto mt-5 @endif ">
-    <strong>© Copyright 2017 - {{ date('Y') }}, Developed by
-      <a target="_blank" href="https://www.vfixtechnology.com">VFIX TECHNOLOGY</a>.
-    </strong>
-    All rights reserved.
-    <div class="float-right d-none d-sm-inline-block">
-      <b>Version</b> 1.0.1
-    </div>
-  </footer>
+    <footer class="main-footer @if(Route::is('login','register','password.confirm','password.update','password.reset','password.request')) mx-auto mt-5 @endif ">
+        <strong>© Copyright 2024 - {{ date('Y') }}, Developed by
+            <a target="_blank" href="#">TechRo Technology</a>.
+        </strong>
+        All rights reserved.
+        <div class="float-right d-none d-sm-inline-block">
+            <b>Version</b> 1.0.1
+        </div>
+    </footer>
 
     {{-- Base Scripts (depends on Laravel asset bundling tool) --}}
     @if(config('adminlte.enabled_laravel_mix', false))
