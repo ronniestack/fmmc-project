@@ -15,6 +15,7 @@ class StatusUpdated
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $appointment;
+    
     public function __construct($appointment)
     {
         $this->appointment = $appointment;
