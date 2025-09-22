@@ -11,7 +11,7 @@
     @php( $register_url = $register_url ? url($register_url) : '' )
 @endif
 
-@section('auth_header', __('adminlte::adminlte.register_message'))
+@section('auth_header', __('adminlte::adminlte.signup_message'))
 
 @section('auth_body')
     <form action="{{ $register_url }}" method="post">
@@ -53,7 +53,7 @@
             @enderror
         </div>
 
-        {{-- Email field --}}
+        {{-- Phone field --}}
         <div class="input-group mb-3">
             <input type="tel" name="phone" class="form-control @error('phone') is-invalid @enderror"
                     value="{{ old('phone') }}" placeholder="Phone no.">
@@ -120,7 +120,13 @@
 @section('auth_footer')
     <p class="my-0">
         <a href="{{ $login_url }}">
-            {{ __('adminlte::adminlte.i_already_have_a_membership') }}
+            {{ __('adminlte::adminlte.already_have_an_account') }}
+        </a>
+    </p>
+
+    <p class="my-0">
+        <a href="{{ url('/') }}">
+            Back to Website
         </a>
     </p>
 @stop
