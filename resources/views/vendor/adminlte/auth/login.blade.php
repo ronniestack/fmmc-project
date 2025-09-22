@@ -21,19 +21,20 @@
 @section('auth_header', __('adminlte::adminlte.login_message'))
 
 @section('auth_body')
-@if (count($errors) > 0)
-<div class="alert alert-dismissable alert-danger mt-3">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-    <strong>Whoops!</strong> There were some problems with your input.<br>
-    <ul>
-        @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
-        @endforeach
-    </ul>
-</div>
-@endif
+    @if (count($errors) > 0)
+        <div class="alert alert-dismissable alert-danger mt-3">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <strong>Whoops!</strong> There were some problems with your input.<br>
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <form action="{{ $login_url }}" method="post">
         @csrf
 
@@ -97,21 +98,31 @@
 @stop
 
 @section('auth_footer')
-    {{-- Password reset link --}}
-    @if($password_reset_url)
-        <p class="my-0">
-            <a href="{{ $password_reset_url }}">
-                {{ __('adminlte::adminlte.i_forgot_my_password') }}
-            </a>
-        </p>
-    @endif
+    <div class="row">
+        {{-- Register link --}}
+        @if($register_url)
+            <p class="my-0 col-md-6">
+                <a href="{{ $register_url }}">
+                    {{ __('adminlte::adminlte.create_account') }}
+                </a>
+            </p>
+        @endif
 
-    {{-- Register link --}}
-    @if($register_url)
-        <p class="my-0">
-            <a href="{{ $register_url }}">
-                {{ __('adminlte::adminlte.register_a_new_membership') }}
+        {{-- Password reset link --}}
+        @if($password_reset_url)
+            <p class="my-0 col-md-6">
+                <a href="{{ $password_reset_url }}">
+                    {{ __('adminlte::adminlte.forgot_password') }}
+                </a>
+            </p>
+        @endif
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <a href="{{ url('/') }}">
+                Back to Website
             </a>
-        </p>
-    @endif
+        </div>
+    </div>
 @stop
