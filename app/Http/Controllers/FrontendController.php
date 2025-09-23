@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Category;
-use App\Models\Employee;
+use App\Models\Doctor;
 use App\Models\Service;
 use App\Models\Setting;
 use App\Models\Appointment;
@@ -15,7 +15,6 @@ use View;
 
 class FrontendController extends Controller
 {
-
     public function __construct()
     {
         $setting = Setting::firstOrFail();
@@ -27,13 +26,13 @@ class FrontendController extends Controller
         $categories = Category::with([
             'services' => function($query) {
                 $query->where('status', 1) // Only active services
-                    ->with('employees'); // Load all employees for each service
+                    ->with('doctors'); // Load all doctors for each service
             }
         ])->where('status', 1)->get();
 
-        $employees = Employee::with('services')->with('user')->get();
+        $doctors = Doctor::with('services')->with('user')->get();
 
-        return view('frontend.index', compact('categories','employees'));
+        return view('frontend.index', compact('categories','doctors'));
     }
 
 
@@ -58,46 +57,43 @@ class FrontendController extends Controller
             });
 
         return response()->json([
-            'success' => true,
-            'services' => $services
+            'success'   => true,
+            'services'  => $services
         ]);
     }
 
 
-    public function getEmployees(Request $request, Service $service)
+    public function getDoctors(Request $request, Service $service)
     {
-        $employees = $service->employees()
+        $doctors = $service->doctors()
             ->whereHas('user', function ($query) {
                 $query->where('status', 1);
             })
             ->with('user') // Eager load user details
             ->get();
 
-        if ($employees->isEmpty()) {
+        if ($doctors->isEmpty()) {
             return response()->json([
                 'success' => false,
-                'message' => 'No employees available for this service'
+                'message' => 'No doctors are available for this service'
             ]);
         }
 
         return response()->json([
             'success' => true,
-            'employees' => $employees,
+            'doctors' => $doctors,
             'service' => $service
         ]);
     }
 
-
-
-
-    public function getEmployeeAvailability(Employee $employee, $date = null)
+    public function getDoctorAvailability(Doctor $doctor, $date = null)
     {
         // Use current date if not provided
         $date = $date ? Carbon::parse($date) : now();
 
         // Validate slot duration exists
-        if (!$employee->slot_duration) {
-            return response()->json(['error' => 'Slot duration not set for this employee'], 400);
+        if (!$doctor->slot_duration) {
+            return response()->json(['error' => 'Slot duration not set for this doctor'], 400);
         }
 
         try {
@@ -118,21 +114,21 @@ class FrontendController extends Controller
                 return implode('-', $formattedTimes);
             }
 
-            // Process holidays expections
-            $holidaysExceptions = $employee->holidays->mapWithKeys(function ($holiday) {
-                $hours = !empty($holiday->hours)
-                    ? collect($holiday->hours)->map(function ($timeRange) {
+            // Process doctorsExtraShifts expections
+            $doctorsExtraShiftsExceptions = $doctor->doctorsExtraShifts->mapWithKeys(function ($doctorsExtraShifts) {
+                $hours = !empty($doctorsExtraShifts->hours)
+                    ? collect($doctorsExtraShifts->hours)->map(function ($timeRange) {
                         return formatTimeRange($timeRange);
                     })->toArray()
                     : [];
 
-                return [$holiday->date => $hours];
+                return [$doctorsExtraShifts->date => $hours];
             })->toArray();
 
             // using spatie opening hours package to process data and expections
             $openingHours = OpeningHours::create(array_merge(
-                $employee->days,
-                ['exceptions' => $holidaysExceptions]
+                $doctor->days,
+                ['exceptions' => $doctorsExtraShiftsExceptions]
             ));
 
             // Get available time ranges for the requested date
@@ -143,21 +139,21 @@ class FrontendController extends Controller
                 return response()->json(['available_slots' => []]);
             }
 
-            // Generate time slots - NOW PASSING THE EMPLOYEE ID
+            // Generate time slots - NOW PASSING THE DOCTOR ID
             $slots = $this->generateTimeSlots(
                 $availableRanges,
-                $employee->slot_duration,
-                $employee->break_duration ?? 0,
+                $doctor->slot_duration,
+                $doctor->break_duration ?? 0,
                 $date,
-                $employee->id  // This is the crucial addition
+                $doctor->id  // This is the crucial addition
             );
 
             return response()->json([
-                'employee_id' => $employee->id,
-                'date' => $date->toDateString(),
-                'available_slots' => $slots,
-                'slot_duration' => $employee->slot_duration,
-                'break_duration' => $employee->break_duration,
+                'doctor_id'       => $doctor->id,
+                'date'              => $date->toDateString(),
+                'available_slots'   => $slots,
+                'slot_duration'     => $doctor->slot_duration,
+                'break_duration'    => $doctor->break_duration,
             ]);
 
         } catch (\Exception $e) {
@@ -165,16 +161,15 @@ class FrontendController extends Controller
         }
     }
 
-
-    protected function generateTimeSlots($availableRanges, $slotDuration, $breakDuration, $date, $employeeId)
+    protected function generateTimeSlots($availableRanges, $slotDuration, $breakDuration, $date, $doctorId)
     {
         $slots = [];
         $now = now();
         $isToday = $date->isToday();
 
-        // Get existing appointments for this date and employee
+        // Get existing appointments for this date and doctor
         $existingAppointments = Appointment::where('booking_date', $date->toDateString())
-            ->where('employee_id', $employeeId)
+            ->where('doctor_id', $doctorId)
             ->whereNotIn('status', ['Cancelled']) // Exclude cancelled/ here could add more status to make expection
             ->get(['booking_time']);
 
@@ -183,7 +178,7 @@ class FrontendController extends Controller
             $times = explode(' - ', $appointment->booking_time);
             return [
                 'start' => Carbon::createFromFormat('g:i A', trim($times[0]))->format('H:i'),
-                'end' => Carbon::createFromFormat('g:i A', trim($times[1]))->format('H:i')
+                'end'   => Carbon::createFromFormat('g:i A', trim($times[1]))->format('H:i')
             ];
         })->toArray();
 
@@ -246,6 +241,4 @@ class FrontendController extends Controller
 
         return $slots;
     }
-
-
 }
