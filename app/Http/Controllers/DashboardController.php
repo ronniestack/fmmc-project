@@ -5,32 +5,41 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Appointment;
 use App\Models\Setting;
-use Carbon\Carbon;
 use App\Events\StatusUpdated;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
+    /**
+     * Show the dashboard with all relevant appointments.
+     */
     public function index()
     {
+        // Get system-wide settings (throws 404 if not found)
         $setting = Setting::firstOrFail();
+
+        // Get logged-in user
         $user = auth()->user();
 
-        // Start with base query
-        $query = Appointment::query()->with(['employee.user', 'service', 'user']);
+        // Start with base query including relationships
+        $query = Appointment::query()->with(['doctor.user', 'service', 'user']);
 
-        // Only admins can see all data - no conditions added
+        // Restrict access: only admins see all data
         if (!$user->hasRole('admin')) {
             $query->where(function($q) use ($user) {
-                if ($user->employee) {
-                    $q->where('employee_id', $user->employee->id);
+                if ($user->doctor) {
+                    $q->where('doctor_id', $user->doctor->id);
                 }
+
+                // Also show appointments the user booked
                 $q->orWhere('user_id', $user->id);
             });
         }
 
-        // Format the appointments with proper date handling
+        // Fetch and transform appointments into calendar-friendly format
         $appointments = $query->get()->map(function ($appointment) {
             try {
+                // Ensure booking_time has a start-end format like "10:00 AM - 11:00 AM"
                 if (!str_contains($appointment->booking_time ?? '', '-')) {
                     throw new \Exception("Invalid time format");
                 }
@@ -38,41 +47,42 @@ class DashboardController extends Controller
                 // Parse booking date
                 $bookingDate = Carbon::parse($appointment->booking_date);
 
-                // Parse start and end times
+                // Split start and end times
                 [$startTime, $endTime] = array_map('trim', explode('-', $appointment->booking_time));
 
-                // Create proper datetime objects
+                // Convert times into Carbon datetime with the same booking date
                 $startDateTime = Carbon::createFromFormat('h:i A', $startTime)
                     ->setDate($bookingDate->year, $bookingDate->month, $bookingDate->day);
 
                 $endDateTime = Carbon::createFromFormat('h:i A', $endTime)
                     ->setDate($bookingDate->year, $bookingDate->month, $bookingDate->day);
-
-                // Handle overnight appointments (if end time is next day)
+      
+                // If end time is earlier than start (e.g., overnight appointments), push to next day
                 if ($endDateTime->lt($startDateTime)) {
                     $endDateTime->addDay();
                 }
 
+                // Return formatted appointment
                 return [
-                    'id' => $appointment->id, // Add appointment ID
-                    'title' => sprintf('%s - %s',
-                        $appointment->name,
-                        $appointment->service->title ?? 'Service'
-                    ),
-                    'start' => $startDateTime->toIso8601String(),
-                    'end' => $endDateTime->toIso8601String(),
-                    'description' => $appointment->notes,
-                    'email' => $appointment->email,
-                    'phone' => $appointment->phone,
-                    'amount' => $appointment->amount,
-                    'status' => $appointment->status,
-                    'staff' => $appointment->employee->user->name ?? 'Unassigned',
-                    'color' => $this->getStatusColor($appointment->status),
-                    'service_title' => $appointment->service->title ?? 'Service', // Add service title
-                    'name' => $appointment->name, // Add client name
-                    'notes' => $appointment->notes, // Add notes
+                    'id'            => $appointment->id, 
+                    'title'         => sprintf('%s - %s',
+                                        $appointment->name,
+                                        $appointment->service->title ?? 'Service'),
+                    'start'         => $startDateTime->toIso8601String(),
+                    'end'           => $endDateTime->toIso8601String(),
+                    'description'   => $appointment->notes,
+                    'email'         => $appointment->email,
+                    'phone'         => $appointment->phone,
+                    'amount'        => $appointment->amount,
+                    'status'        => $appointment->status,
+                    'doctor'        => $appointment->doctor->user->name ?? 'Unassigned',
+                    'color'         => $this->getStatusColor($appointment->status),
+                    'service_title' => $appointment->service->title ?? 'Service', 
+                    'name'          => $appointment->name, 
+                    'notes'         => $appointment->notes, 
                 ];
             } catch (\Exception $e) {
+                // Log formatting issues instead of breaking the page
                 \Log::error("Format error for appointment {$appointment->id}: {$e->getMessage()}");
                 return null;
             }
@@ -81,36 +91,40 @@ class DashboardController extends Controller
         return view('backend.dashboard.index', compact('appointments'));
     }
 
-    // Helper function to get color based on status
+    /**
+     * Return color code for appointment status.
+     */
     private function getStatusColor($status)
     {
         $colors = [
-            'Pending payment' => '#f39c12',
-            'Processing' => '#3498db',
-            'Confirmed' => '#2ecc71',
+            'Booked'    => '#3498db',
+            'Rendered'  => '#2ecc71',
             'Cancelled' => '#ff0000',
-            'Completed' => '#008000',
-            'On Hold' => '#95a5a6',
-            'Rescheduled' => '#f1c40f',
-            'No Show' => '#e67e22',
         ];
 
+        // Default gray if status not found
         return $colors[$status] ?? '#7f8c8d';
     }
 
-
-    // In AppointmentController.php
+    /**
+     * Update appointment status (called from AppointmentController ideally).
+     */
     public function updateStatus(Request $request)
     {
+        // Validate request
         $request->validate([
-            'appointment_id' => 'required|exists:appointments,id',
-            'status' => 'required|in:Pending payment,Processing,Confirmed,Cancelled,Completed,On Hold,No Show'
+            'appointment_id'    => 'required|exists:appointments,id',
+            'status'            => 'required|in:Booked,Rendered,Cancelled'
         ]);
 
+        // Find appointment
         $appointment = Appointment::findOrFail($request->appointment_id);
+
+        // Update status
         $appointment->status = $request->status;
         $appointment->save();
 
+        // Fire event for listeners (e.g., notify doctor/patient)
         event(new StatusUpdated($appointment));
 
         return back()->with('success', 'Status updated successfully');
