@@ -13,7 +13,10 @@ class CategoryController extends Controller
      */
     public function index()
     {
+        // Fetch categories ordered by latest first
         $categories = Category::latest()->get();
+
+        // Pass data to the view
         return view('backend.category.index',compact('categories'));
     }
 
@@ -30,23 +33,26 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
+        // Validate input data
         $data = $request->validate([
-            'title' => 'required',
-            'slug' => 'required|unique:categories,slug',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'body' => 'nullable|string',
-            'featured' => 'nullable|boolean',
-            'status' => 'nullable|boolean',
-            'meta_title' => 'nullable|string',
-            'meta_description' => 'nullable|string',
-            'meta_keywords' => 'nullable|string',
-            'other' => 'nullable',
+            'title'             => 'required',
+            'slug'              => 'required|unique:categories,slug',
+            'image'             => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'body'              => 'nullable|string',
+            'featured'          => 'nullable|boolean',
+            'status'            => 'nullable|boolean',
+            'meta_title'        => 'nullable|string',
+            'meta_description'  => 'nullable|string',
+            'meta_keywords'     => 'nullable|string',
+            'other'             => 'nullable',
         ]);
 
+        // Default values for checkboxes
         $data['featured'] = $request->featured ?? 0;
         $data['status'] = $request->status ?? 0;
         $data['body'] = $request->body ?? '';
 
+        // Handle image upload if provided
         if($request->hasFile('image'))
         {
             $imageName = time().'.'.$request->image->getClientOriginalExtension();
@@ -54,7 +60,9 @@ class CategoryController extends Controller
             $data['image'] = $imageName;
         }
 
+        // Save category in database
         Category::create($data);
+
         return redirect()->route('category.index')->withSuccess('Category has been created successfully!');
     }
 
@@ -63,7 +71,9 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
+        // Fetch parent categories for display
         $categories = Category::where('parent_id',null)->orderby('title','asc')->get();
+
         return view('backend.category.show',compact('category','categories'));
     }
 
@@ -80,23 +90,26 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
+        // Validate input data
         $data = $request->validate([
-            'title' => 'required|string|max:255',
-            'slug' => ['required', Rule::unique('categories')->ignore($category)],
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'body' => 'nullable|string',
-            'featured' => 'nullable|boolean',
-            'status' => 'nullable|boolean',
-            'meta_title' => 'nullable|string',
-            'meta_description' => 'nullable|string',
-            'meta_keywords' => 'nullable|string',
-            'other' => 'nullable',
+            'title'             => 'required|string|max:255',
+            'slug'              => ['required', Rule::unique('categories')->ignore($category)],
+            'image'             => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'body'              => 'nullable|string',
+            'featured'          => 'nullable|boolean',
+            'status'            => 'nullable|boolean',
+            'meta_title'        => 'nullable|string',
+            'meta_description'  => 'nullable|string',
+            'meta_keywords'     => 'nullable|string',
+            'other'             => 'nullable',
         ]);
 
+        // Default values
         $data['featured'] = $request->featured ?? 0;
         $data['status'] = $request->status ?? 0;
         $data['body'] = $request->body ?? '';
 
+        // Handle delete image request
         if($request->delete_image)
         {
             $destination = public_path('uploads/images/category/'.$category->image);
@@ -106,24 +119,26 @@ class CategoryController extends Controller
             }
 
             $data['image'] =  '';
-
         }
 
+        // Handle new image upload
         if($request->hasFile('image')){
-            // delete old image
+            // Delete old image
             $destination = public_path('uploads/images/category/'.$category->image);
             if(\File::exists($destination))
             {
                 \File::delete($destination);
             }
 
-            //add new image
+            // Save new image
             $imageName = time().'.'.$request->image->getClientOriginalExtension();
             $request->image->move(public_path('uploads/images/category/'),$imageName);
             $data['image'] = $imageName;
-
         }
+
+        // Update category record
         $category->update($data);
+
         return redirect()->route('category.index')->with('success', 'Category has been updated successfully.');
     }
 
@@ -132,17 +147,22 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
+        // Prevent deletion if linked to services
         if($category->services->count())
-       {
+        {
             return back()->withErrors('Category cannot be deleted as it is linked to services.');
-       }
+        }
 
+        // Delete category image if exists
         $destination = public_path('uploads/images/category/'.$category->image);
         if(\File::exists($destination))
         {
             \File::delete($destination);
         }
+
+        // Delete category record
         $category->delete();
+
         return redirect()->back()->with('success', 'Category has been deleted successfully.');
     }
 }
