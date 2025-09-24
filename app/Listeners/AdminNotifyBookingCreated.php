@@ -8,7 +8,6 @@ use Illuminate\Queue\InteractsWithQueue;
 use App\Models\Setting;
 use App\Notifications\AdminNotificationBookingCreated;
 
-
 class AdminNotifyBookingCreated
 {
     /**
