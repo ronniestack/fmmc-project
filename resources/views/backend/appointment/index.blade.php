@@ -31,17 +31,17 @@
                         <p><strong>Service:</strong> <span id="modalService">N/A</span></p>
                         <p><strong>Email:</strong> <span id="modalEmail">N/A</span></p>
                         <p><strong>Phone:</strong> <span id="modalPhone">N/A</span></p>
-                        <p><strong>Doctor:</strong> <span id="modalStaff">N/A</span></p>
+                        <p><strong>Doctor:</strong> <span id="modalDoctor">N/A</span></p>
                         <p><strong>Date & Time:</strong> <span id="modalStartTime">N/A</span></p>
                         <p><strong>Amount:</strong> <span id="modalAmount">N/A</span></p>
                         <p><strong>Notes:</strong> <span id="modalNotes">N/A</span></p>
                         <p><strong>Current Status:</strong> <span id="modalStatusBadge">N/A</span></p>
 
-                        <div class="form-group ">
+                        <div class="form-group">
                             <label><strong>Status:</strong></label>
                             <select name="status" class="form-control" id="modalStatusSelect">
-                                <option value="Pending">Pending</option>
-                                <option value="Confirmed">Confirmed</option>
+                                <option value="Booked">Booked</option>
+                                <option value="Rendered">Rendered</option>
                                 <option value="Cancelled">Cancelled</option>
                             </select>
                         </div>
@@ -117,8 +117,8 @@
                                     <tbody>
                                         @php
                                             $statusColors = [
-                                                'Pending' => '#f39c12',
-                                                'Confirmed' => '#2ecc71',
+                                                'Booked' => '#3498db',
+                                                'Rendered' => '#2ecc71',
                                                 'Cancelled' => '#ff0000',
                                             ];
                                         @endphp
@@ -143,7 +143,7 @@
                                                     {{ $appointment->phone }}
                                                 </td>
                                                 <td>
-                                                    {{ $appointment->employee->user->name }}
+                                                    {{ $appointment->doctor->user->name }}
                                                 </td>
                                                 <td>
                                                     {{ $appointment->service->title ?? 'NA' }}
@@ -174,7 +174,7 @@
                                                         data-service="{{ $appointment->service->title ?? 'MA' }}"
                                                         data-email="{{ $appointment->email }}"
                                                         data-phone="{{ $appointment->phone }}"
-                                                        data-employee="{{ $appointment->employee->user->name }}"
+                                                        data-doctor="{{ $appointment->doctor->user->name }}"
                                                         data-start="{{ $appointment->booking_date . ' ' . $appointment->booking_time }}"
                                                         data-amount="{{ $appointment->amount }}"
                                                         data-notes="{{ $appointment->notes }}"
@@ -224,7 +224,7 @@
             $('#modalService').text($(this).data('service'));
             $('#modalEmail').text($(this).data('email'));
             $('#modalPhone').text($(this).data('phone'));
-            $('#modalStaff').text($(this).data('employee'));
+            $('#modalDoctor').text($(this).data('doctor'));
             $('#modalStartTime').text($(this).data('start'));
             $('#modalAmount').text($(this).data('amount'));
             $('#modalNotes').text($(this).data('notes'));
@@ -233,8 +233,8 @@
             $('#modalStatusSelect').val(status);
 
             var statusColors = {
-                'Pending': '#f39c12',
-                'Confirmed': '#2ecc71',
+                'Booked': '#3498db',
+                'Rendered': '#2ecc71',
                 'Cancelled': '#ff0000',
             };
 
