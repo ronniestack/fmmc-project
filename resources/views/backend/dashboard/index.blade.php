@@ -36,7 +36,7 @@
                         <p><strong>Service:</strong> <span id="modalService">N/A</span></p>
                         <p><strong>Email:</strong> <span id="modalEmail">N/A</span></p>
                         <p><strong>Phone:</strong> <span id="modalPhone">N/A</span></p>
-                        <p><strong>Doctor:</strong> <span id="modalStaff">N/A</span></p>
+                        <p><strong>Doctor:</strong> <span id="modalDoctor">N/A</span></p>
                         <p><strong>Date & Time:</strong> <span id="modalStartTime">N/A</span></p>
                         <p><strong>Amount:</strong> <span id="modalAmount">N/A</span></p>
                         <p><strong>Notes:</strong> <span id="modalNotes">N/A</span></p>
@@ -173,7 +173,7 @@
                     $('#modalService').text(calEvent.service_title || calEvent.title.split(' - ')[1] || 'N/A');
                     $('#modalEmail').text(calEvent.email || 'N/A');
                     $('#modalPhone').text(calEvent.phone || 'N/A');
-                    $('#modalStaff').text(calEvent.staff || 'N/A');
+                    $('#modalDoctor').text(calEvent.doctor || 'N/A');
                     $('#modalAmount').text(calEvent.amount || 'N/A');
                     $('#modalNotes').text(calEvent.description || calEvent.notes || 'N/A');
                     $('#modalStartTime').text(moment(calEvent.start).format('MMMM D, YYYY h:mm A'));
